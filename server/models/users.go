@@ -1,16 +1,16 @@
 package models
 
 import (
-  "github.com/jinzhu/gorm"
+	"github.com/jinzhu/gorm"
 )
 
 type Users struct {
-  User_Id     uint   `json:"user_id" gorm:"primary_key"`
-  First_Name  string `json:"first_name" gorm:"not null"`
-  Last_Name string `json:"last_name" gorm:"not null"`
-  Username string `json:"username" gorm:"unique;not null"`
-  Password_Hash string `json:"password_hash" gorm:"not null"`
-  Is_Admin bool `json:"is_admin" gorm:"not null"`
+	User_Id       uint   `json:"user_id" gorm:"primary_key"`
+	First_Name    string `json:"first_name" gorm:"not null"`
+	Last_Name     string `json:"last_name" gorm:"not null"`
+	Username      string `json:"username" gorm:"unique;not null"`
+	Password_Hash string `json:"password_hash" gorm:"not null"`
+	Is_Admin      bool   `json:"is_admin" gorm:"not null"`
 }
 
 func (u *Users) SaveUser(db *gorm.DB) (*Users, error) {

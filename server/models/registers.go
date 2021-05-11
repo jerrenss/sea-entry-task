@@ -5,6 +5,6 @@ import (
 )
 
 type Registers struct {
-  User_Id     uint   `json:"user_id" gorm:"primary_key"`
-  Event_Id  string `json:"event_id" gorm:"primary_key"`
+	User_Id  uint64 `json:"user_id" gorm:"primary_key"`
+	Event_Id uint64 `json:"event_id" gorm:"primary_key"`
 }

@@ -1,19 +1,17 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"event-server/models"
 	"event-server/controllers"
+	"event-server/models"
+	"github.com/gin-gonic/gin"
 )
 
 var Router *gin.Engine
 
 func main() {
 	Router = gin.Default()
-	db := models.SetupDB()
-	Router.Use(func(c *gin.Context) {
-		c.Set("db", db)
-	})
+	models.SetupDB()
+
 	api := Router.Group("/api")
 	{
 		api.GET("/test", func(ctx *gin.Context) {
@@ -22,8 +20,11 @@ func main() {
 			})
 		})
 	}
-	Router.GET("/api/getRegistrations", controllers.GetRegistrations) 
 
+	// Registers Routes
+	Router.GET("/api/registers/getAllRegistrations", controllers.GetAllRegistrations)
+	Router.GET("/api/registers/getEventRegistrations/:eventId", controllers.GetEventRegistrations)
+	Router.POST("/api/registers/createRegistration", controllers.CreateRegistration)
 
 	Router.Run(":5000")
 }
