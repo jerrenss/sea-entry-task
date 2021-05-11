@@ -1,19 +1,17 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"event-server/models"
 	"event-server/controllers"
+	"event-server/models"
+	"github.com/gin-gonic/gin"
 )
 
 var Router *gin.Engine
 
 func main() {
 	Router = gin.Default()
-	db := models.SetupDB()
-	Router.Use(func(c *gin.Context) {
-		c.Set("db", db)
-	})
+	models.SetupDB()
+
 	api := Router.Group("/api")
 	{
 		api.GET("/test", func(ctx *gin.Context) {
@@ -22,8 +20,36 @@ func main() {
 			})
 		})
 	}
-	Router.GET("/api/getRegistrations", controllers.GetRegistrations) 
 
+	// Registers Routes
+	Router.GET("/api/registers/getAllRegistrations", controllers.GetAllRegistrations)
+	Router.GET("/api/registers/getEventRegistrations/:eventId", controllers.GetEventRegistrations)
+	Router.POST("/api/registers/createRegistration", controllers.CreateRegistration)
+
+	// Likes Routes
+	Router.GET("/api/likes/getAllLikes", controllers.GetAllLikes)
+	Router.GET("/api/likes/getEventLikes/:eventId", controllers.GetEventLikes)
+	Router.POST("/api/likes/createLike", controllers.CreateLike)
+
+	// Comments Routes
+	Router.GET("/api/comments/getAllComments", controllers.GetAllComments)
+	Router.GET("/api/comments/getEventComments/:eventId", controllers.GetEventComments)
+	Router.POST("/api/comments/createComment", controllers.CreateComment)
+
+	// User Routes
+	Router.GET("/api/users/getAllUsers", controllers.GetAllUsers)
+	Router.GET("/api/users/getSingleUser/:userId", controllers.GetSingleUser)
+	Router.POST("/api/users/createUser", controllers.CreateUser)
+
+	// Event Routes
+	Router.GET("/api/events/getAllEvents", controllers.GetAllEvents)
+	Router.GET("/api/events/getSingleEvent/:eventId", controllers.GetSingleEvent)
+	Router.POST("/api/events/createEvent", controllers.CreateEvent)
+
+	// Photo Routes
+	Router.GET("/api/photos/getAllPhotos", controllers.GetAllPhotos)
+	Router.GET("/api/photos/getEventPhotos/:eventId", controllers.GetEventPhotos)
+	Router.POST("/api/photos/createPhoto", controllers.CreatePhoto)
 
 	Router.Run(":5000")
 }
