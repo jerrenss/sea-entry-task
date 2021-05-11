@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"event-server/models"
+	"event-server/controllers"
 )
 
 var Router *gin.Engine
@@ -21,6 +22,8 @@ func main() {
 			})
 		})
 	}
+	Router.GET("/api/getRegistrations", controllers.GetRegistrations) 
+
 
 	Router.Run(":5000")
 }
