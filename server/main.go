@@ -36,5 +36,15 @@ func main() {
 	Router.GET("/api/comments/getEventComments/:eventId", controllers.GetEventComments)
 	Router.POST("/api/comments/createComment", controllers.CreateComment)
 
+	// User Routes
+	Router.GET("/api/users/getAllUsers", controllers.GetAllUsers)
+	Router.GET("/api/users/getSingleUser/:userId", controllers.GetSingleUser)
+	Router.POST("/api/users/createUser", controllers.CreateUser)
+
+	// Event Routes
+	Router.GET("/api/events/getAllEvents", controllers.GetAllEvents)
+	Router.GET("/api/events/getSingleEvent/:eventId", controllers.GetSingleEvent)
+	Router.POST("/api/events/createEvent", controllers.CreateEvent)
+
 	Router.Run(":5000")
 }

@@ -21,6 +21,9 @@ func SetupDB() {
 		panic(err.Error())
 	}
 
+	instance.AutoMigrate(&Users{})
+	instance.AutoMigrate(&Events{})
+	// instance.AutoMigrate(&Photos{})
 	instance.AutoMigrate(&Registers{})
 	instance.AutoMigrate(&Likes{})
 	instance.AutoMigrate(&Comments{})
