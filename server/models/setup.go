@@ -22,6 +22,7 @@ func SetupDB() {
 	}
 
 	instance.AutoMigrate(&Registers{})
+	instance.AutoMigrate(&Likes{})
 
 	fmt.Println("Connected to MySQL!")
 

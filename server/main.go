@@ -26,5 +26,10 @@ func main() {
 	Router.GET("/api/registers/getEventRegistrations/:eventId", controllers.GetEventRegistrations)
 	Router.POST("/api/registers/createRegistration", controllers.CreateRegistration)
 
+	// Likes Routes
+	Router.GET("/api/likes/getAllLikes", controllers.GetAllLikes)
+	Router.GET("/api/likes/getEventLikes/:eventId", controllers.GetEventLikes)
+	Router.POST("/api/likes/createLike", controllers.CreateLike)
+
 	Router.Run(":5000")
 }

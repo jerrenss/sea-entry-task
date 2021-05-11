@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/jinzhu/gorm"
+	// "github.com/jinzhu/gorm"
 )
 
 type Users struct {
@@ -13,22 +13,22 @@ type Users struct {
 	Is_Admin      bool   `json:"is_admin" gorm:"not null"`
 }
 
-func (u *Users) SaveUser(db *gorm.DB) (*Users, error) {
+// func (u *Users) SaveUser(db *gorm.DB) (*Users, error) {
 
-	var err error
-	err = db.Debug().Create(&u).Error
-	if err != nil {
-		return &Users{}, err
-	}
-	return u, nil
-}
+// 	var err error
+// 	err = db.Debug().Create(&u).Error
+// 	if err != nil {
+// 		return &Users{}, err
+// 	}
+// 	return u, nil
+// }
 
-func (u *Users) FindAllUsers(db *gorm.DB) (*[]Users, error) {
-	var err error
-	users := []Users{}
-	err = db.Debug().Model(&Users{}).Limit(10).Find(&users).Error
-	if err != nil {
-		return &[]Users{}, err
-	}
-	return &users, err
-}
+// func (u *Users) FindAllUsers(db *gorm.DB) (*[]Users, error) {
+// 	var err error
+// 	users := []Users{}
+// 	err = db.Debug().Model(&Users{}).Limit(10).Find(&users).Error
+// 	if err != nil {
+// 		return &[]Users{}, err
+// 	}
+// 	return &users, err
+// }
