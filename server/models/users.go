@@ -1,6 +1,9 @@
 package models
 
 import (
+	"github.com/dgrijalva/jwt-go"
+	"golang.org/x/crypto/bcrypt"
+	"os"
 	"time"
 )
 
@@ -14,22 +17,25 @@ type Users struct {
 	Is_Admin      bool      `json:"is_admin" gorm:"not null"`
 }
 
-// func (u *Users) SaveUser(db *gorm.DB) (*Users, error) {
+func Hash(password string) ([]byte, error) {
+	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+}
 
-// 	var err error
-// 	err = db.Debug().Create(&u).Error
-// 	if err != nil {
-// 		return &Users{}, err
-// 	}
-// 	return u, nil
-// }
+func VerifyPassword(hashedPassword, password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+}
 
-// func (u *Users) FindAllUsers(db *gorm.DB) (*[]Users, error) {
-// 	var err error
-// 	users := []Users{}
-// 	err = db.Debug().Model(&Users{}).Limit(10).Find(&users).Error
-// 	if err != nil {
-// 		return &[]Users{}, err
-// 	}
-// 	return &users, err
-// }
+func CreateToken(userId uint64, isAdmin bool) (string, error) {
+	var err error
+	atClaims := jwt.MapClaims{}
+	atClaims["authorized"] = true
+	atClaims["user_id"] = userId
+	atClaims["is_admin"] = isAdmin
+	atClaims["exp"] = time.Now().Add(time.Minute * 15).Unix()
+	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
+	token, err := at.SignedString([]byte(os.Getenv("ACCESS_SECRET")))
+	if err != nil {
+		return "", err
+	}
+	return token, nil
+}
