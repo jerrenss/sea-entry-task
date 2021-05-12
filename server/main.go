@@ -4,12 +4,14 @@ import (
 	"event-server/controllers"
 	"event-server/models"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 var Router *gin.Engine
 
 func main() {
 	Router = gin.Default()
+	godotenv.Load()
 	models.SetupDB()
 
 	api := Router.Group("/api")
