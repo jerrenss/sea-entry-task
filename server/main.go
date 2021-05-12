@@ -4,12 +4,14 @@ import (
 	"event-server/controllers"
 	"event-server/models"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 var Router *gin.Engine
 
 func main() {
 	Router = gin.Default()
+	godotenv.Load()
 	models.SetupDB()
 
 	api := Router.Group("/api")
@@ -40,6 +42,8 @@ func main() {
 	Router.GET("/api/users/getAllUsers", controllers.GetAllUsers)
 	Router.GET("/api/users/getSingleUser/:userId", controllers.GetSingleUser)
 	Router.POST("/api/users/createUser", controllers.CreateUser)
+	Router.POST("/api/users/loginUser", controllers.LoginUser)
+	Router.GET("/api/users/signoutUser", controllers.SignoutUser)
 
 	// Event Routes
 	Router.GET("/api/events/getAllEvents", controllers.GetAllEvents)
