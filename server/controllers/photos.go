@@ -4,12 +4,10 @@ import (
 	"event-server/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
+	"path/filepath"
+	"strconv"
 )
-
-type CreatePhotoInput struct {
-	Event_Id  uint64 `json:"event_id" binding:"required"`
-	Photo_Url string `json:"photo_url" binding:"required"`
-}
 
 func GetAllPhotos(c *gin.Context) {
 	var photos []models.Photos
@@ -23,16 +21,38 @@ func GetEventPhotos(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": photos})
 }
 
-func CreatePhoto(c *gin.Context) {
-	// Validate input
-	var input CreatePhotoInput
-	if err := c.ShouldBindJSON(&input); err != nil {
+func UploadPhoto(c *gin.Context) {
+	// Extract request information
+	event_id := c.PostForm("event_id")
+	file, err := c.FormFile("photo")
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Create photo
-	photo := models.Photos{Event_Id: input.Event_Id, Photo_Url: input.Photo_Url}
+	// Create /uploads folder if necessary
+	path := filepath.Join(".", "uploads")
+
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		os.Mkdir(path, 0700)
+	}
+
+	filename := "./uploads/event" + event_id + "-" + filepath.Base(file.Filename)
+
+	// Upload photo
+	if err := c.SaveUploadedFile(file, filename); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	photoUrl := filename[2:]
+	eventId, err := strconv.ParseUint(string(event_id), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+
+	// Save photo information in DB
+	photo := models.Photos{Event_Id: eventId, Photo_Url: photoUrl}
 	if err := models.DB.Create(&photo).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
