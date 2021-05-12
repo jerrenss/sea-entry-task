@@ -55,7 +55,8 @@ func main() {
 	// Photo Routes
 	Router.GET("/api/photos/getAllPhotos", controllers.GetAllPhotos)
 	Router.GET("/api/photos/getEventPhotos/:eventId", controllers.GetEventPhotos)
-	Router.POST("/api/photos/uploadPhoto", controllers.UploadPhoto)
+	Router.POST("/api/photos/uploadSinglePhoto", controllers.UploadSinglePhoto)
+	Router.POST("/api/photos/uploadMultiplePhotos", controllers.UploadMultiplePhotos)
 
 	Router.Run(":5000")
 }
