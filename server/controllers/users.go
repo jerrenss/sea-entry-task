@@ -93,6 +93,21 @@ func LoginUser(c *gin.Context) {
 	// Set cookie and return respose to client
 	c.SetCookie("jwt", token, 3600, "/", "localhost", true, true)
 
-	c.JSON(http.StatusOK, gin.H{"data": "Verification successful!"})
+	c.JSON(http.StatusOK, gin.H{"data": "Login successful!"})
+
+}
+
+func SignoutUser(c *gin.Context) {
+	// Delete JWT token
+	token, err := models.DeleteToken()
+	if err != nil {
+		c.JSON(http.StatusUnprocessableEntity, "Unable to delete JWT token")
+		return
+	}
+
+	// Set cookie and return respose to client
+	c.SetCookie("jwt", token, -1, "/", "localhost", true, true)
+
+	c.JSON(http.StatusOK, gin.H{"data": "Signout successful!"})
 
 }

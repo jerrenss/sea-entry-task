@@ -39,3 +39,18 @@ func CreateToken(userId uint64, isAdmin bool) (string, error) {
 	}
 	return token, nil
 }
+
+func DeleteToken() (string, error) {
+	var err error
+	atClaims := jwt.MapClaims{}
+	atClaims["authorized"] = false
+	atClaims["user_id"] = "Expired"
+	atClaims["is_admin"] = "Expired"
+	atClaims["exp"] = time.Now().Add(-7 * 24 * time.Hour).Unix()
+	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
+	token, err := at.SignedString([]byte(os.Getenv("ACCESS_SECRET")))
+	if err != nil {
+		return "", err
+	}
+	return token, nil
+}

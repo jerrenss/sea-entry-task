@@ -43,6 +43,7 @@ func main() {
 	Router.GET("/api/users/getSingleUser/:userId", controllers.GetSingleUser)
 	Router.POST("/api/users/createUser", controllers.CreateUser)
 	Router.POST("/api/users/loginUser", controllers.LoginUser)
+	Router.GET("/api/users/signoutUser", controllers.SignoutUser)
 
 	// Event Routes
 	Router.GET("/api/events/getAllEvents", controllers.GetAllEvents)
