@@ -11,6 +11,8 @@ var Router *gin.Engine
 
 func main() {
 	Router = gin.Default()
+	Router.Static("/uploads", "./uploads")
+
 	godotenv.Load()
 	models.SetupDB()
 
@@ -53,7 +55,7 @@ func main() {
 	// Photo Routes
 	Router.GET("/api/photos/getAllPhotos", controllers.GetAllPhotos)
 	Router.GET("/api/photos/getEventPhotos/:eventId", controllers.GetEventPhotos)
-	Router.POST("/api/photos/createPhoto", controllers.CreatePhoto)
+	Router.POST("/api/photos/uploadPhoto", controllers.UploadPhoto)
 
 	Router.Run(":5000")
 }
