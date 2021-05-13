@@ -10,7 +10,7 @@ export default class MyDocument extends Document {
         <Head>
           {/* PWA primary color */}
           <meta name="theme-color" content={theme.palette.primary.main} />
-          <link rel="icon" href="/favicon-seaevents.png" />
+          <link rel="icon" href="/favicon-logo.png" />
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&family=Roboto+Slab:wght@300;400;500;600;700;800&display=swap"
