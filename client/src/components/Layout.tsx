@@ -1,22 +1,9 @@
-import {
-  Box,
-  Drawer,
-  Grid,
-  makeStyles,
-  Theme,
-  Toolbar,
-  Typography,
-  useMediaQuery,
-} from '@material-ui/core'
-import { useRouter } from 'next/router'
-import React, { ReactNode, useEffect, useState } from 'react'
-import DrawerList from './DrawerList'
+import { Box, Drawer, makeStyles, Theme, Toolbar } from '@material-ui/core'
+import React, { useEffect } from 'react'
 import Navbar from './Navbar'
 import AOS from 'aos'
-import DrawerListAdmin from './DrawerListAdmin'
-import UpdateStamp from './UpdateStamp'
 
-const drawerWidth: number = 240
+const drawerWidth: number = 300
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -59,12 +46,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  progressWrapper: {
-    margin: theme.spacing(1, 1),
-    padding: theme.spacing(2, 2),
-    border: `1px solid ${theme.palette.primary.main}`,
-    borderRadius: '10px',
-  },
   content: {
     display: 'grid',
     alignContent: 'flex-start',
@@ -77,50 +58,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  title: {
-    display: 'inline-block',
-    verticalAlign: 'middle',
-  },
-  buttons: {
-    display: 'inline-block',
-    justifyContent: 'space-evenly',
-    marginLeft: theme.spacing(1.5),
-  },
 }))
 
-interface LayoutProps {
-  isAdmin?: boolean
-  pageTitle?: string
-  hideTitle?: boolean
-  pageModal?: ReactNode
-  exportButton?: ReactNode
-  updateStamp?: string
-}
-
-const Layout: React.FC<LayoutProps> = (props) => {
+const Layout: React.FC = (props) => {
   const classes = useStyles(props)
-  const [sidebarToggle, setSidebarToggle] = useState(false)
-  const {
-    children,
-    isAdmin = false,
-    pageTitle,
-    hideTitle = false,
-    pageModal,
-    exportButton,
-    updateStamp,
-  } = props
-  const router = useRouter()
-
-  const matchesMobile = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.down('xs'),
-  )
-
-  const toggleSidebar = () => setSidebarToggle(!sidebarToggle)
-
-  const redirectPage = (e, url) => {
-    e.preventDefault()
-    router.push(url)
-  }
+  const { children } = props
 
   useEffect(() => {
     AOS.init({
@@ -130,83 +72,22 @@ const Layout: React.FC<LayoutProps> = (props) => {
 
   return (
     <Box className={classes.root}>
-      <Navbar rootStyles={classes.appBar} toggleSidebar={toggleSidebar} />
-      {matchesMobile && sidebarToggle && (
-        <Drawer
-          className={classes.drawer}
-          variant="permanent"
-          classes={{
-            paper: classes.drawerPaper,
-          }}
-          data-aos="slide-right"
-        >
-          <Toolbar />
-          <Box className={classes.drawerContainer}>
-            {isAdmin ? (
-              <DrawerListAdmin
-                pageTitle={pageTitle}
-                onClickHandler={redirectPage}
-              />
-            ) : (
-              <DrawerList pageTitle={pageTitle} onClickHandler={redirectPage} />
-            )}
-          </Box>
-        </Drawer>
-      )}
-      {!matchesMobile && (
-        <Drawer
-          className={classes.drawer}
-          variant="permanent"
-          classes={{
-            paper: classes.drawerPaper,
-          }}
-        >
-          <Toolbar />
-          <Box className={classes.drawerContainer}>
-            {isAdmin ? (
-              <DrawerListAdmin
-                pageTitle={pageTitle}
-                onClickHandler={redirectPage}
-              />
-            ) : (
-              <DrawerList pageTitle={pageTitle} onClickHandler={redirectPage} />
-            )}
-          </Box>
-        </Drawer>
-      )}
-      {matchesMobile && !sidebarToggle && (
-        <Box className={classes.content} data-aos="slide-right">
-          <Box>
-            {!hideTitle && (
-              <Typography variant="h6" className={classes.title}>
-                {pageTitle}
-              </Typography>
-            )}
-            <Box className={classes.buttons}>
-              {pageModal}
-              {exportButton}
-            </Box>
-          </Box>
-          {children}
+      <Navbar rootStyles={classes.appBar} />
+      <Drawer
+        className={classes.drawer}
+        variant="permanent"
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+      >
+        <Toolbar />
+        <Box className={classes.drawerContainer}>
+          {/* Insert Profile Component */}
         </Box>
-      )}
-      {!matchesMobile && (
-        <Box className={classes.content} data-aos="slide-right">
-          <Box>
-            {!hideTitle && (
-              <Typography variant="h6" className={classes.title}>
-                {pageTitle}
-              </Typography>
-            )}
-            <Box className={classes.buttons}>
-              {pageModal}
-              {exportButton}
-            </Box>
-            {updateStamp && <UpdateStamp updates={updateStamp} />}
-          </Box>
-          {children}
-        </Box>
-      )}
+      </Drawer>
+      <Box className={classes.content} data-aos="slide-right">
+        {children}
+      </Box>
     </Box>
   )
 }
