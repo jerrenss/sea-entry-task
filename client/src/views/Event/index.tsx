@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import Layout from '../../components/Layout'
 import { ToggleButton } from '@material-ui/lab'
 import ThumbUpIcon from '@material-ui/icons/ThumbUp'
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -23,6 +24,10 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiToggleButton-root': {
       marginRight: theme.spacing(2),
     },
+  },
+  toggleText: {
+    marginLeft: theme.spacing(1),
+    fontWeight: 700,
   },
   content: {
     display: 'flex',
@@ -61,26 +66,32 @@ const Event: React.FC<EventProps> = (props) => {
           <ToggleButton
             classes={{ selected: classes.selected }}
             value="check"
-            selected={like}
-            onChange={() => {
-              setLike(!like)
-            }}
-          >
-            <ThumbUpIcon />
-          </ToggleButton>
-          <ToggleButton
-            classes={{ selected: classes.selected }}
-            value="check"
             selected={register}
             onChange={() => {
               setRegister(!register)
             }}
           >
-            {register ? (
-              <Typography>Registered</Typography>
-            ) : (
-              <Typography>Register</Typography>
-            )}
+            <>
+              <LibraryBooksIcon />
+              <Typography className={classes.toggleText}>
+                {register ? 'Registered' : 'Register'}
+              </Typography>
+            </>
+          </ToggleButton>
+          <ToggleButton
+            classes={{ selected: classes.selected }}
+            value="check"
+            selected={like}
+            onChange={() => {
+              setLike(!like)
+            }}
+          >
+            <>
+              <ThumbUpIcon />
+              <Typography className={classes.toggleText}>
+                {like ? 'Liked' : 'Like'}
+              </Typography>
+            </>
           </ToggleButton>
         </Box>
         <Box className={classes.content}>

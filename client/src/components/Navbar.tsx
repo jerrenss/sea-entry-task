@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.contrast,
     fontWeight: 600,
   },
-  hotelBadge: {
+  status: {
     textTransform: 'uppercase',
     color: theme.palette.text.contrast,
     fontWeight: 600,
@@ -86,9 +86,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
           <OpacityIcon className={classes.icon} />
           <Box className={classes.personalization}>
             <Typography className={classes.title}>SeaEvents</Typography>
-            <Typography className={classes.hotelBadge}>
-              {isAdmin() ? getAdminBadge() : getHotelName()}
-            </Typography>
+            <Typography className={classes.status}>Admin</Typography>
           </Box>
           <Box className={classes.navigation}>
             <Link href="/admin/create-event" passHref>
@@ -96,9 +94,6 @@ const Navbar: React.FC<NavbarProps> = (props) => {
             </Link>
             <Link href="/client/home" passHref>
               <Button className={classes.button}>Home</Button>
-            </Link>
-            <Link href="#" passHref>
-              <Button className={classes.button}>About</Button>
             </Link>
             <Button
               className={classes.button}
