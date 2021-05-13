@@ -6,4 +6,6 @@
 
 /client/node_modules
 
+/client/out
+
 /client/.next/

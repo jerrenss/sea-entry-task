@@ -42,11 +42,11 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.contrast,
     fontWeight: 600,
   },
-  hotelBadge: {
+  status: {
     textTransform: 'uppercase',
-    color: theme.palette.text.primary,
+    color: theme.palette.text.contrast,
     fontWeight: 600,
-    backgroundColor: theme.palette.background.secondary,
+    backgroundColor: theme.palette.secondary.main,
     borderRadius: '20px',
     padding: theme.spacing(0.5, 1),
   },
@@ -76,7 +76,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 
   const onSignOut = (e) => {
     e.preventDefault()
-    console.log('Sign out')
+    router.push('/login')
   }
 
   return (
@@ -86,19 +86,14 @@ const Navbar: React.FC<NavbarProps> = (props) => {
           <OpacityIcon className={classes.icon} />
           <Box className={classes.personalization}>
             <Typography className={classes.title}>SeaEvents</Typography>
-            <Typography className={classes.hotelBadge}>
-              {isAdmin() ? getAdminBadge() : getHotelName()}
-            </Typography>
+            <Typography className={classes.status}>Admin</Typography>
           </Box>
           <Box className={classes.navigation}>
-            <Link href="#" passHref>
+            <Link href="/admin/create-event" passHref>
               <Button className={classes.button}>Create Event</Button>
             </Link>
-            <Link href="#" passHref>
+            <Link href="/client/home" passHref>
               <Button className={classes.button}>Home</Button>
-            </Link>
-            <Link href="#" passHref>
-              <Button className={classes.button}>About</Button>
             </Link>
             <Button
               className={classes.button}

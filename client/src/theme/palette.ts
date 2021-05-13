@@ -16,13 +16,13 @@ const palette: Partial<Palette> = {
   primary: {
     contrastText: black,
     dark: black,
-    main: '#00003E',
+    main: '#0088CC',
     light: white,
   },
   secondary: {
     contrastText: white,
     dark: black,
-    main: '#00003E',
+    main: '#BB1133',
     light: white,
   },
   success: {

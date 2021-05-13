@@ -2,6 +2,7 @@ import { Box, Drawer, makeStyles, Theme, Toolbar } from '@material-ui/core'
 import React, { useEffect } from 'react'
 import Navbar from './Navbar'
 import AOS from 'aos'
+import Profile from './Profile'
 
 const drawerWidth: number = 300
 
@@ -37,14 +38,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   drawerContainer: {
     overflow: 'auto',
-    '& .MuiListItemIcon-root': {
-      minWidth: 40,
-    },
-    [theme.breakpoints.down('xs')]: {
-      '& nav': {
-        width: '100%',
-      },
-    },
   },
   content: {
     display: 'grid',
@@ -82,7 +75,7 @@ const Layout: React.FC = (props) => {
       >
         <Toolbar />
         <Box className={classes.drawerContainer}>
-          {/* Insert Profile Component */}
+          <Profile />
         </Box>
       </Drawer>
       <Box className={classes.content} data-aos="slide-right">
