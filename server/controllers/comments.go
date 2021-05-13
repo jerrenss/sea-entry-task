@@ -12,20 +12,14 @@ type CreateCommentInput struct {
 	Content  string `json:"content" binding:"required"`
 }
 
-type result struct {
+type CommentResult struct {
 	User_Id    uint64
 	Event_Id   uint64
+	Content    string
+	CreatedAt  string
 	First_Name string
 	Last_Name  string
 }
-
-// func GetEventCommentsSecond(c *gin.Context) {
-// 	var results []result
-
-// 	models.DB.Model(models.Comments{}).Select("comments.user_id, comments.event_id, users.first_name, users.last_name").Joins("join users on comments.user_id = users.user_id").Where("event_id = ?", c.Param("eventId")).Scan(&results)
-
-// 	c.JSON(http.StatusOK, gin.H{"data": results})
-// }
 
 func GetAllComments(c *gin.Context) {
 	var comments []models.Comments
@@ -34,9 +28,9 @@ func GetAllComments(c *gin.Context) {
 }
 
 func GetEventComments(c *gin.Context) {
-	var comments []models.Comments
-	models.DB.Where("event_id = ?", c.Param("eventId")).Find(&comments)
-	c.JSON(http.StatusOK, gin.H{"data": comments})
+	var commentResult []CommentResult
+	models.DB.Model(models.Comments{}).Select("comments.user_id, comments.event_id, comments.content, comments.created_at, users.first_name, users.last_name").Joins("join users on comments.user_id = users.user_id").Where("event_id = ?", c.Param("eventId")).Scan(&commentResult)
+	c.JSON(http.StatusOK, gin.H{"data": commentResult})
 }
 
 func CreateComment(c *gin.Context) {
