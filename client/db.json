@@ -1,0 +1,24 @@
+{
+    "amenities": [
+        {
+            "type": "Business Centre",
+            "availability": true,
+            "name": "Pacific Business Centre",
+            "openingHours": "9am to 9pm",
+            "location": "2nd floor of Hotel",
+            "contact": 65566556,
+            "services": "Printing / Fax / Self service Computers",
+            "otherDetails": ""
+        },
+        {
+            "type": "Meeting Room",
+            "availability": true,
+            "name": "Concorde Meeting Room",
+            "openingHours": "11am to 12pm",
+            "location": "3rd floor of Hotel",
+            "contact": 65566555,
+            "services": "NIL",
+            "otherDetails": ""
+        }
+    ]
+}
