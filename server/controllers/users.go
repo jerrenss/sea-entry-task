@@ -91,7 +91,7 @@ func LoginUser(c *gin.Context) {
 	}
 
 	// Set cookie and return respose to client
-	c.SetCookie("jwt", token, 3600, "/", "localhost", true, true)
+	c.SetCookie("jwt", token, 3600, "/", "localhost", false, true)
 
 	c.JSON(http.StatusOK, gin.H{"data": "Login successful!"})
 
@@ -106,7 +106,7 @@ func SignoutUser(c *gin.Context) {
 	}
 
 	// Set cookie and return respose to client
-	c.SetCookie("jwt", token, -1, "/", "localhost", true, true)
+	c.SetCookie("jwt", token, -1, "/", "localhost", false, true)
 
 	c.JSON(http.StatusOK, gin.H{"data": "Signout successful!"})
 
