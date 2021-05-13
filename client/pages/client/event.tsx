@@ -1,3 +1,3 @@
-import Events from '../../src/views/Events'
+import Event from '../../src/views/Event'
 
-export default Events
+export default Event

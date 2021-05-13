@@ -11,14 +11,14 @@ export default {
     },
   },
   containedPrimary: {
-    backgroundColor: '#00003E',
+    backgroundColor: '#0088CC',
     color: '#ffffff',
     '&:hover': {
       backgroundColor: '#A8A8A8',
     },
   },
   containedSecondary: {
-    backgroundColor: '#00003E',
+    backgroundColor: '#BB1133',
     color: '#ffffff',
     '&:hover': {
       backgroundColor: '#A8A8A8',

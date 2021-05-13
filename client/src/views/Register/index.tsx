@@ -50,7 +50,11 @@ const Copyright = () => {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link href="https://www.sea.com/home">SeaEvents</Link>{' '}
+      <Link href="https://www.sea.com/home">
+        <Typography variant="body2" display="inline">
+          SeaEvents{' '}
+        </Typography>
+      </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
@@ -167,7 +171,7 @@ const Register: React.FC = () => {
               fullWidth
               type="submit"
               variant="contained"
-              color="primary"
+              color="secondary"
               className={classes.submit}
               onClick={handleSubmit}
             >
@@ -175,8 +179,10 @@ const Register: React.FC = () => {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/login" variant="body2">
-                  {'Already have an account? Log in'}
+                <Link href="/login">
+                  <Typography variant="body2">
+                    Already have an account? Log in
+                  </Typography>
                 </Link>
               </Grid>
             </Grid>

@@ -50,7 +50,11 @@ const Copyright = () => {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link href="https://www.sea.com/home">SeaEvents</Link>{' '}
+      <Link href="https://www.sea.com/home">
+        <Typography variant="body2" display="inline">
+          SeaEvents{' '}
+        </Typography>
+      </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
@@ -75,7 +79,7 @@ const Login: React.FC = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log(`Username: ${username}, Password: ${password}`)
-    // router.push('/dashboard/hotel-information/general')
+    router.push('/client/home')
   }
 
   return (
@@ -117,7 +121,7 @@ const Login: React.FC = () => {
               fullWidth
               type="submit"
               variant="contained"
-              color="primary"
+              color="secondary"
               className={classes.submit}
               onClick={handleSubmit}
             >
@@ -125,13 +129,15 @@ const Login: React.FC = () => {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/register" variant="body2">
-                  {"Don't have an account? Sign up"}
+                <Link href="/register">
+                  <Typography variant="body2">
+                    Don't have an account? Sign up
+                  </Typography>
                 </Link>
               </Grid>
               <Grid item>
                 <Link href="#" variant="body2">
-                  Forgot password?
+                  <Typography variant="body2">Forgot Password? </Typography>{' '}
                 </Link>
               </Grid>
             </Grid>
