@@ -110,20 +110,20 @@ const Essentials: React.FC = (props) => {
   }
 
   return (
-    <UserRoute>
-      <Layout pageTitle={tableTitle} hideTitle>
-        <Table
-          tableHeaders={headers}
-          tableRawContent={essentials}
-          tableInfo={tableInfo}
-          tableTitle={tableTitle}
-          loading={loading}
-          modalDetails={modalDetails}
-          updateTableInfo={updateEssentials}
-          updateHeadersAndContent={updateHeadersAndContent}
-        />
-      </Layout>
-    </UserRoute>
+    // <UserRoute>
+    <Layout pageTitle={tableTitle} hideTitle>
+      <Table
+        tableHeaders={headers}
+        tableRawContent={essentials}
+        tableInfo={tableInfo}
+        tableTitle={tableTitle}
+        loading={loading}
+        modalDetails={modalDetails}
+        updateTableInfo={updateEssentials}
+        updateHeadersAndContent={updateHeadersAndContent}
+      />
+    </Layout>
+    // </UserRoute>
   )
 }
 

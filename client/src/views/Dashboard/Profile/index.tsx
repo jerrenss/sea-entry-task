@@ -58,24 +58,24 @@ const Profile: React.FC = (props) => {
   }, [])
 
   return (
-    <UserRoute>
-      <Layout
-        pageTitle={pageTitle}
-        pageModal={profilePageModal(
-          onClickHandler,
-          PROFILE_MODAL_INFO,
-          modalOpen,
-        )}
-        exportButton={
-          <FormExportButton
-            data={filterFormObject(content)}
-            pageTitle={pageTitle}
-          />
-        }
-      >
-        {content && <Form preLoadedData={content} />}
-      </Layout>
-    </UserRoute>
+    // <UserRoute>
+    <Layout
+      pageTitle={pageTitle}
+      pageModal={profilePageModal(
+        onClickHandler,
+        PROFILE_MODAL_INFO,
+        modalOpen,
+      )}
+      exportButton={
+        <FormExportButton
+          data={filterFormObject(content)}
+          pageTitle={pageTitle}
+        />
+      }
+    >
+      {content && <Form preLoadedData={content} />}
+    </Layout>
+    // </UserRoute>
   )
 }
 

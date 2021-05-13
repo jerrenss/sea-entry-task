@@ -57,12 +57,23 @@ const Copyright = () => {
   )
 }
 
-const Login: React.FC = () => {
+const Register: React.FC = () => {
   const classes = useStyles()
   const router = useRouter()
 
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  const handleFirstNameChange = (e) => {
+    setFirstName(e.target.value)
+  }
+
+  const handleLastNameChange = (e) => {
+    setLastName(e.target.value)
+  }
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value)
@@ -72,10 +83,15 @@ const Login: React.FC = () => {
     setPassword(e.target.value)
   }
 
+  const handleIsAdminChange = (e) => {
+    setIsAdmin(e.target.checked)
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(`Username: ${username}, Password: ${password}`)
-    // router.push('/dashboard/hotel-information/general')
+    console.log(
+      `First Name: ${firstName}, Last Name: ${lastName}, Username: ${username}, Password: ${password}, Admin: ${isAdmin}`,
+    )
   }
 
   return (
@@ -89,6 +105,30 @@ const Login: React.FC = () => {
           </Avatar>
           <Typography variant="h5">SeaEvents</Typography>
           <form className={classes.form} noValidate>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="firstName"
+              label="First Name"
+              name="firstName"
+              autoComplete="firstName"
+              autoFocus
+              onChange={handleFirstNameChange}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="lastName"
+              label="Last Name"
+              name="lastName"
+              autoComplete="lastName"
+              autoFocus
+              onChange={handleLastNameChange}
+            />
             <TextField
               variant="outlined"
               margin="normal"
@@ -113,6 +153,16 @@ const Login: React.FC = () => {
               autoComplete="current-password"
               onChange={handlePasswordChange}
             />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  value="isAdmin"
+                  color="primary"
+                  onChange={handleIsAdminChange}
+                />
+              }
+              label="Admin"
+            />
             <Button
               fullWidth
               type="submit"
@@ -121,17 +171,12 @@ const Login: React.FC = () => {
               className={classes.submit}
               onClick={handleSubmit}
             >
-              Log In
+              Sign Up
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/register" variant="body2">
-                  {"Don't have an account? Sign up"}
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Forgot password?
+                <Link href="/login" variant="body2">
+                  {'Already have an account? Log in'}
                 </Link>
               </Grid>
             </Grid>
@@ -145,4 +190,4 @@ const Login: React.FC = () => {
   )
 }
 
-export default Login
+export default Register
