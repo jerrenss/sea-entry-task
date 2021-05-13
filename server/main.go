@@ -5,6 +5,7 @@ import (
 	"event-server/models"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"log"
 )
 
 var Router *gin.Engine
@@ -13,14 +14,17 @@ func main() {
 	Router = gin.Default()
 	Router.Static("/uploads", "./uploads")
 
-	godotenv.Load()
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	models.SetupDB()
 
 	api := Router.Group("/api")
 	{
-		api.GET("/test", func(ctx *gin.Context) {
+		api.GET("/", func(ctx *gin.Context) {
 			ctx.JSON(200, gin.H{
-				"message": "test successful",
+				"message": "Welcome to the Event App server!",
 			})
 		})
 	}
@@ -58,5 +62,7 @@ func main() {
 	Router.POST("/api/photos/uploadSinglePhoto", controllers.UploadSinglePhoto)
 	Router.POST("/api/photos/uploadMultiplePhotos", controllers.UploadMultiplePhotos)
 
-	Router.Run(":5000")
+	if err := Router.Run(":5000"); err != nil {
+		log.Fatal("Error launching API server")
+	}
 }

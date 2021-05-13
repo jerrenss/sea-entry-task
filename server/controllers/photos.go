@@ -35,7 +35,10 @@ func UploadSinglePhoto(c *gin.Context) {
 	path := filepath.Join(".", "uploads")
 
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		os.Mkdir(path, 0700)
+		if err := os.Mkdir(path, 0700); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
 	}
 
 	filename := "./uploads/event" + event_id + "-" + filepath.Base(file.Filename)
@@ -78,7 +81,10 @@ func UploadMultiplePhotos(c *gin.Context) {
 		path := filepath.Join(".", "uploads")
 
 		if _, err := os.Stat(path); os.IsNotExist(err) {
-			os.Mkdir(path, 0700)
+			if err := os.Mkdir(path, 0700); err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				return
+			}
 		}
 
 		filename := "./uploads/event" + event_id + "-" + filepath.Base(file.Filename)

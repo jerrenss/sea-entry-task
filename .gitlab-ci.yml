@@ -1,15 +1,17 @@
 stages:
   - lint
-  - test
+  # - test
  
 lint:
   stage: lint
   image: golang:1.14-buster
   before_script:
     - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.29.0
-  script: golangci-lint run
+  script: 
+    cd server
+    golangci-lint run
  
-test:
-  stage: test
-  image: golang:1.14-buster
-  script: go test ./...
+# test:
+#   stage: test
+#   image: golang:1.14-buster
+#   script: go test ./...
