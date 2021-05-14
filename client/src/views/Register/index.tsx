@@ -12,8 +12,7 @@ import OpacityIcon from '@material-ui/icons/Opacity'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
-import userService from '../../services/users'
-import { VOUCH_PORTAL_URL } from '../../config'
+import { createUser } from '../../services/users'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -93,9 +92,21 @@ const Register: React.FC = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(
-      `First Name: ${firstName}, Last Name: ${lastName}, Username: ${username}, Password: ${password}, Admin: ${isAdmin}`,
-    )
+    const createUserInput = {
+      first_name: firstName,
+      last_name: lastName,
+      username,
+      password,
+      is_admin: isAdmin,
+    }
+    createUser(createUserInput)
+      .then((res) => {
+        alert(`User ${username} created successfully!`)
+        router.push('/login')
+      })
+      .catch((err) => {
+        alert(err.response.data.error)
+      })
   }
 
   return (

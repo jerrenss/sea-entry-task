@@ -81,8 +81,6 @@ const Login: React.FC = () => {
     }
     loginUser(credentials)
       .then((res) => {
-        console.log('Success')
-        console.log(res.data.data)
         router.push('/client/home')
       })
       .catch((err) => {

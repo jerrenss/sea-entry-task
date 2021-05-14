@@ -7,12 +7,7 @@ import OpacityIcon from '@material-ui/icons/Opacity'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-
-import {
-  getAdminViewMode,
-  getHotelName,
-  isAdmin,
-} from '../services/authentication'
+import { signoutUser } from '../services/auth'
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -60,15 +55,6 @@ interface NavbarProps {
   rootStyles?: string
 }
 
-export const getAdminBadge = () => {
-  const name = getAdminViewMode()
-  if (name) {
-    return `Admin (${name})`
-  } else {
-    return 'Admin'
-  }
-}
-
 const Navbar: React.FC<NavbarProps> = (props) => {
   const { rootStyles } = props
   const classes = useStyles()
@@ -76,7 +62,13 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 
   const onSignOut = (e) => {
     e.preventDefault()
-    router.push('/login')
+    signoutUser()
+      .then((res) => {
+        router.push('/login')
+      })
+      .catch((err) => {
+        alert(err.response.data.error)
+      })
   }
 
   return (

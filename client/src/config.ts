@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { getVCPJWT } from './services/authentication'
 // export const STG_API_URL: string = process.env.NEXT_PUBLIC_STG_API_URL
 export const DEV_API_URL: string = process.env.NEXT_PUBLIC_DEV_API_URL
 export const VOUCH_MGMT_URL: string = process.env.NEXT_PUBLIC_VOUCH_MGMT_URL

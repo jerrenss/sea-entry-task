@@ -8,3 +8,7 @@ interface LoginInput {
 export const loginUser = (credentials: LoginInput) => {
   return apiClient.post(`/users/login`, credentials)
 }
+
+export const signoutUser = () => {
+  return apiClient.get(`/users/signout`)
+}

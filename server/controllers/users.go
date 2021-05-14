@@ -7,11 +7,11 @@ import (
 )
 
 type CreateUserInput struct {
-	First_Name    string `json:"first_name" binding:"required"`
-	Last_Name     string `json:"last_name" binding:"required"`
-	Username      string `json:"username" binding:"required"`
-	Password_Hash string `json:"password_hash" binding:"required"`
-	Is_Admin      bool   `json:"is_admin"`
+	First_Name string `json:"first_name" binding:"required"`
+	Last_Name  string `json:"last_name" binding:"required"`
+	Username   string `json:"username" binding:"required"`
+	Password   string `json:"password" binding:"required"`
+	Is_Admin   bool   `json:"is_admin"`
 }
 
 type LoginInput struct {
@@ -29,7 +29,7 @@ func GetSingleUser(c *gin.Context) {
 	var user models.Users
 
 	if err := models.DB.Where("user_id = ?", c.Param("userId")).First(&user).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found!"})
 		return
 	}
 
@@ -45,7 +45,7 @@ func CreateUser(c *gin.Context) {
 	}
 
 	// Hash password
-	hashedPassword, err := models.Hash(input.Password_Hash)
+	hashedPassword, err := models.Hash(input.Password)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Unable to hash password!"})
 		return
