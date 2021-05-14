@@ -209,7 +209,7 @@ const Event: React.FC<EventProps> = (props) => {
           <Box className={classes.buttonWrapper}>
             <RegistrationModal content={allRegistrations} />
             <LikesModal content={allLikes} />
-            <CommentsModal />
+            <CommentsModal id={id} />
           </Box>
         </Box>
       </Box>

@@ -64,9 +64,10 @@ func main() {
 	Router.POST("/api/likes/create", controllers.CreateLikeManual)
 
 	// Comments Routes
-	Router.GET("/api/comments", controllers.GetAllComments)
-	Router.GET("/api/comments/event/:eventId", controllers.GetEventComments)
-	Router.POST("/api/comments/create", controllers.CreateComment)
+	Router.GET("/api/comments", controllers.ValidateAuth(), controllers.GetAllComments)
+	Router.GET("/api/comments/event/:eventId", controllers.ValidateAuth(), controllers.GetEventComments)
+	Router.POST("/api/comments/create", controllers.ValidateAuth(), controllers.CreateComment)
+	Router.POST("/api/comments/createManual", controllers.ValidateAuth(), controllers.CreateCommentManual)
 
 	if err := Router.Run(":5000"); err != nil {
 		log.Fatal("Error launching API server")

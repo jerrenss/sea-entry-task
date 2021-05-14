@@ -6,8 +6,13 @@ import (
 	"net/http"
 )
 
-type CreateCommentInput struct {
+type CreateCommentInputManual struct {
 	User_Id  uint64 `json:"user_id" binding:"required"`
+	Event_Id uint64 `json:"event_id" binding:"required"`
+	Content  string `json:"content" binding:"required"`
+}
+
+type CreateCommentInput struct {
 	Event_Id uint64 `json:"event_id" binding:"required"`
 	Content  string `json:"content" binding:"required"`
 }
@@ -19,6 +24,7 @@ type CommentResult struct {
 	CreatedAt  string
 	First_Name string
 	Last_Name  string
+	Username   string
 }
 
 func GetAllComments(c *gin.Context) {
@@ -29,13 +35,32 @@ func GetAllComments(c *gin.Context) {
 
 func GetEventComments(c *gin.Context) {
 	var commentResult []CommentResult
-	models.DB.Model(models.Comments{}).Select("comments.user_id, comments.event_id, comments.content, comments.created_at, users.first_name, users.last_name").Joins("join users on comments.user_id = users.user_id").Where("event_id = ?", c.Param("eventId")).Scan(&commentResult)
+	models.DB.Model(models.Comments{}).Select("comments.user_id, comments.event_id, comments.content, comments.created_at, users.first_name, users.last_name, users.username").Joins("join users on comments.user_id = users.user_id").Where("event_id = ?", c.Param("eventId")).Scan(&commentResult)
 	c.JSON(http.StatusOK, gin.H{"data": commentResult})
 }
 
 func CreateComment(c *gin.Context) {
+	user_id, _ := c.Get("user_id")
 	// Validate input
 	var input CreateCommentInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Input mismatch!"})
+		return
+	}
+
+	// Create comment
+	comment := models.Comments{User_Id: ProcessUserId(user_id), Event_Id: input.Event_Id, Content: input.Content}
+	if err := models.DB.Create(&comment).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Creation of comment failed!"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": comment})
+}
+
+func CreateCommentManual(c *gin.Context) {
+	// Validate input
+	var input CreateCommentInputManual
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Input mismatch!"})
 		return
