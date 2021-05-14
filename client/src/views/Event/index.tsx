@@ -108,6 +108,7 @@ const Event: React.FC<EventProps> = (props) => {
       getEventRegistrations(id)
         .then((res) => {
           setAllRegistrations(res.data.data)
+          setRegister(res.data.userRegistered)
         })
         .catch((err) => {
           alert(err.response.data.error)

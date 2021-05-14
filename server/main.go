@@ -50,8 +50,8 @@ func main() {
 	Router.POST("/api/photos/uploadMultiple", controllers.UploadMultiplePhotos)
 
 	// Registers Routes
-	Router.GET("/api/registers", controllers.GetAllRegistrations)
-	Router.GET("/api/registers/event/:eventId", controllers.GetEventRegistrations)
+	Router.GET("/api/registers", controllers.ValidateAuth(), controllers.GetAllRegistrations)
+	Router.GET("/api/registers/event/:eventId", controllers.ValidateAuth(), controllers.GetEventRegistrations)
 	Router.GET("/api/registers/create/:eventId", controllers.ValidateAuth(), controllers.CreateRegistration)
 	Router.DELETE("/api/registers/delete/:eventId", controllers.ValidateAuth(), controllers.DeleteRegistration)
 	Router.POST("/api/registers/createManual", controllers.CreateRegistrationManual)
