@@ -102,7 +102,7 @@ const Event: React.FC<EventProps> = (props) => {
           alert(err.response.data.error)
         })
     }
-  }, [id])
+  }, [id, like])
 
   useEffect(() => {
     if (!isNaN(parseInt(id))) {
@@ -115,7 +115,7 @@ const Event: React.FC<EventProps> = (props) => {
           alert(err.response.data.error)
         })
     }
-  }, [id])
+  }, [id, register])
 
   const onRegisterChange = (e) => {
     const isRegisterAction = !register
@@ -209,14 +209,12 @@ const Event: React.FC<EventProps> = (props) => {
           <Typography variant="subtitle2">Category</Typography>
           <Typography>{event?.category}</Typography>
           <Box className={classes.buttonWrapper}>
-            <RegistrationModal />
-            <LikesModal />
+            <RegistrationModal content={allRegistrations} />
+            <LikesModal content={allLikes} />
             <CommentsModal />
           </Box>
         </Box>
       </Box>
-      {/* <Typography>{JSON.stringify(allLikes)}</Typography>
-      <Typography>{JSON.stringify(allRegistrations)}</Typography> */}
     </Layout>
   )
 }

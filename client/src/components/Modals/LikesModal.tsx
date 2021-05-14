@@ -33,15 +33,12 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-function generate(element: React.ReactElement) {
-  return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((value) =>
-    React.cloneElement(element, {
-      key: value,
-    }),
-  )
+interface LikesModalProps {
+  content: any[]
 }
 
-export default function LikesModal() {
+const LikesModal: React.FC<LikesModalProps> = (props) => {
+  const { content } = props
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
 
@@ -56,7 +53,7 @@ export default function LikesModal() {
   return (
     <div>
       <Button variant="contained" color="secondary" onClick={handleOpen}>
-        View Likes
+        {`View Likes (${content.length})`}
       </Button>
       <Modal
         className={classes.modal}
@@ -70,19 +67,18 @@ export default function LikesModal() {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <Typography variant="h6">Likes</Typography>
+            <Typography variant="h6">{`Likes (${content.length})`}</Typography>
             <List dense={true}>
-              {generate(
-                <ListItem>
-                  <ListItemIcon>
-                    <PersonIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Single-line item"
-                    secondary={false ? 'Secondary text' : null}
-                  />
-                </ListItem>,
-              )}
+              {content.map(({ First_Name, Last_Name, Username }) => {
+                return (
+                  <ListItem>
+                    <ListItemIcon>
+                      <PersonIcon />
+                    </ListItemIcon>
+                    <ListItemText>{`${First_Name} ${Last_Name} @${Username}`}</ListItemText>
+                  </ListItem>
+                )
+              })}
             </List>
           </div>
         </Fade>
@@ -90,3 +86,5 @@ export default function LikesModal() {
     </div>
   )
 }
+
+export default LikesModal

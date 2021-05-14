@@ -33,15 +33,12 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-function generate(element: React.ReactElement) {
-  return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((value) =>
-    React.cloneElement(element, {
-      key: value,
-    }),
-  )
+interface RegModalProps {
+  content: any[]
 }
 
-export default function RegistrationModal() {
+const RegistrationModal: React.FC<RegModalProps> = (props) => {
+  const { content } = props
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
 
@@ -56,7 +53,7 @@ export default function RegistrationModal() {
   return (
     <div>
       <Button variant="contained" color="secondary" onClick={handleOpen}>
-        View Registrations
+        {`View Registrations (${content.length})`}
       </Button>
       <Modal
         className={classes.modal}
@@ -70,19 +67,18 @@ export default function RegistrationModal() {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <Typography variant="h6">Registrations</Typography>
+            <Typography variant="h6">{`Registrations (${content.length})`}</Typography>
             <List dense={true}>
-              {generate(
-                <ListItem>
-                  <ListItemIcon>
-                    <PersonIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Single-line item"
-                    secondary={false ? 'Secondary text' : null}
-                  />
-                </ListItem>,
-              )}
+              {content.map(({ First_Name, Last_Name, Username }) => {
+                return (
+                  <ListItem>
+                    <ListItemIcon>
+                      <PersonIcon />
+                    </ListItemIcon>
+                    <ListItemText>{`${First_Name} ${Last_Name} @${Username}`}</ListItemText>
+                  </ListItem>
+                )
+              })}
             </List>
           </div>
         </Fade>
@@ -90,3 +86,4 @@ export default function RegistrationModal() {
     </div>
   )
 }
+export default RegistrationModal

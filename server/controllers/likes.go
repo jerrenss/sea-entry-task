@@ -17,6 +17,7 @@ type LikeResult struct {
 	CreatedAt  string
 	First_Name string
 	Last_Name  string
+	Username   string
 }
 
 func GetAllLikes(c *gin.Context) {
@@ -27,7 +28,7 @@ func GetAllLikes(c *gin.Context) {
 
 func GetEventLikes(c *gin.Context) {
 	var likeResult []LikeResult
-	models.DB.Model(models.Likes{}).Select("likes.user_id, likes.event_id, likes.created_at, users.first_name, users.last_name").Joins("join users on likes.user_id = users.user_id").Where("event_id = ?", c.Param("eventId")).Scan(&likeResult)
+	models.DB.Model(models.Likes{}).Select("likes.user_id, likes.event_id, likes.created_at, users.first_name, users.last_name, users.username").Joins("join users on likes.user_id = users.user_id").Where("event_id = ?", c.Param("eventId")).Scan(&likeResult)
 
 	var userLiked bool
 	user_id, _ := c.Get("user_id")

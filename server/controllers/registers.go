@@ -16,6 +16,7 @@ type RegistrationResult struct {
 	Event_Id   uint64
 	First_Name string
 	Last_Name  string
+	Username   string
 }
 
 func GetAllRegistrations(c *gin.Context) {
@@ -26,7 +27,7 @@ func GetAllRegistrations(c *gin.Context) {
 
 func GetEventRegistrations(c *gin.Context) {
 	var registrationResult []RegistrationResult
-	models.DB.Model(models.Registers{}).Select("registers.user_id, registers.event_id, users.first_name, users.last_name").Joins("join users on registers.user_id = users.user_id").Where("event_id = ?", c.Param("eventId")).Scan(&registrationResult)
+	models.DB.Model(models.Registers{}).Select("registers.user_id, registers.event_id, users.first_name, users.last_name, users.username").Joins("join users on registers.user_id = users.user_id").Where("event_id = ?", c.Param("eventId")).Scan(&registrationResult)
 
 	var userRegistered bool
 	user_id, _ := c.Get("user_id")
