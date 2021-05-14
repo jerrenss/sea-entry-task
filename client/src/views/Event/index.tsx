@@ -6,7 +6,15 @@ import { ToggleButton } from '@material-ui/lab'
 import ThumbUpIcon from '@material-ui/icons/ThumbUp'
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks'
 import { getSingleEvent } from '../../services/events'
-import Cookies from 'js-cookie'
+import RegistrationModal from '../../components/Modals/RegistrationModal'
+import LikesModal from '../../components/Modals/LikesModal'
+import CommentsModal from '../../components/Modals/CommentsModal'
+import { getEventLikes } from '../../services/likes'
+import {
+  createRegistration,
+  deleteRegistration,
+  getEventRegistrations,
+} from '../../services/registers'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -65,9 +73,11 @@ interface IEvent {
 const Event: React.FC<EventProps> = (props) => {
   const { id } = props
   const classes = useStyles()
-  const [like, setLike] = useState(false)
   const [register, setRegister] = useState(false)
+  const [like, setLike] = useState(false)
   const [event, setEvent] = useState<IEvent>(null)
+  const [allRegistrations, setAllRegistrations] = useState([])
+  const [allLikes, setAllLikes] = useState([])
 
   useEffect(() => {
     if (!isNaN(parseInt(id))) {
@@ -76,10 +86,57 @@ const Event: React.FC<EventProps> = (props) => {
           setEvent(res.data.data)
         })
         .catch((err) => {
-          console.log(err.response.data.error)
+          alert(err.response.data.error)
         })
     }
   }, [id])
+
+  useEffect(() => {
+    if (!isNaN(parseInt(id))) {
+      getEventLikes(id)
+        .then((res) => {
+          setAllLikes(res.data.data)
+        })
+        .catch((err) => {
+          alert(err.response.data.error)
+        })
+    }
+  }, [id])
+
+  useEffect(() => {
+    if (!isNaN(parseInt(id))) {
+      getEventRegistrations(id)
+        .then((res) => {
+          setAllRegistrations(res.data.data)
+        })
+        .catch((err) => {
+          alert(err.response.data.error)
+        })
+    }
+  }, [id])
+
+  const onRegisterChange = (e) => {
+    const isRegisterAction = !register
+    console.log(isRegisterAction)
+    setRegister(isRegisterAction)
+    if (isRegisterAction) {
+      createRegistration(id)
+        .then((res) => {
+          console.log('Success')
+        })
+        .catch((err) => {
+          alert(err.response.data.error)
+        })
+    } else {
+      deleteRegistration(id)
+        .then((res) => {
+          console.log('Success')
+        })
+        .catch((err) => {
+          alert(err.response.data.error)
+        })
+    }
+  }
 
   return (
     <Layout>
@@ -90,9 +147,7 @@ const Event: React.FC<EventProps> = (props) => {
             classes={{ selected: classes.selected }}
             value="check"
             selected={register}
-            onChange={() => {
-              setRegister(!register)
-            }}
+            onChange={onRegisterChange}
           >
             <>
               <LibraryBooksIcon />
@@ -133,18 +188,14 @@ const Event: React.FC<EventProps> = (props) => {
           <Typography variant="subtitle2">Category</Typography>
           <Typography>{event?.category}</Typography>
           <Box className={classes.buttonWrapper}>
-            <Button variant="contained" color="secondary">
-              View Registrations
-            </Button>
-            <Button variant="contained" color="secondary">
-              View Likes
-            </Button>
-            <Button variant="contained" color="secondary">
-              View Comments
-            </Button>
+            <RegistrationModal />
+            <LikesModal />
+            <CommentsModal />
           </Box>
         </Box>
       </Box>
+      <Typography>{JSON.stringify(allLikes)}</Typography>
+      <Typography>{JSON.stringify(allRegistrations)}</Typography>
     </Layout>
   )
 }

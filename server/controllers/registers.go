@@ -4,6 +4,8 @@ import (
 	"event-server/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	// "strconv"
+	// "fmt"
 )
 
 type CreateRegistrationInput struct {
@@ -31,6 +33,32 @@ func GetEventRegistrations(c *gin.Context) {
 }
 
 func CreateRegistration(c *gin.Context) {
+	user_id, _ := c.Get("user_id")
+
+	// Create registration
+	registration := models.Registers{User_Id: ProcessUserId(user_id), Event_Id: ConvertStringToUint64(c.Param("eventId"))}
+	if err := models.DB.Create(&registration).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Creation of registration failed!"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": registration})
+}
+
+func DeleteRegistration(c *gin.Context) {
+	user_id, _ := c.Get("user_id")
+
+	// Delete registration
+	registration := models.Registers{User_Id: ProcessUserId(user_id), Event_Id: ConvertStringToUint64(c.Param("eventId"))}
+	if err := models.DB.Delete(&registration).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Deletion of registration failed!"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": registration})
+}
+
+func CreateRegistrationManual(c *gin.Context) {
 	// Validate input
 	var input CreateRegistrationInput
 	if err := c.ShouldBindJSON(&input); err != nil {

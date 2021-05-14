@@ -52,7 +52,9 @@ func main() {
 	// Registers Routes
 	Router.GET("/api/registers", controllers.GetAllRegistrations)
 	Router.GET("/api/registers/event/:eventId", controllers.GetEventRegistrations)
-	Router.POST("/api/registers/create", controllers.CreateRegistration)
+	Router.GET("/api/registers/create/:eventId", controllers.ValidateAuth(), controllers.CreateRegistration)
+	Router.DELETE("/api/registers/delete/:eventId", controllers.ValidateAuth(), controllers.DeleteRegistration)
+	Router.POST("/api/registers/createManual", controllers.CreateRegistrationManual)
 
 	// Likes Routes
 	Router.GET("/api/likes", controllers.GetAllLikes)
