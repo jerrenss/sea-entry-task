@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core'
 import { useForm } from 'react-hook-form'
 import Notification from '../../components/Notification'
+import { createEvent } from '../../services/events'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -44,6 +45,14 @@ const Form: React.FC = (props) => {
 
   const onSubmit = (data) => {
     console.log(data)
+    createEvent(data)
+      .then((res) => {
+        alert(`Event ${data.title} created successfully!`)
+        location.reload()
+      })
+      .catch((err) => {
+        alert(err.response.data.error)
+      })
   }
 
   return (
@@ -91,8 +100,8 @@ const Form: React.FC = (props) => {
                 margin="normal"
                 inputRef={register}
                 fullWidth
-                id="eventDate"
-                name="eventDate"
+                id="event_date"
+                name="event_date"
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
@@ -124,7 +133,7 @@ const Form: React.FC = (props) => {
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
-            <Grid item xs={4} lg={2}>
+            {/* <Grid item xs={4} lg={2}>
               <Typography>Photos</Typography>
             </Grid>
             <Grid item xs={8} lg={10}>
@@ -137,7 +146,7 @@ const Form: React.FC = (props) => {
                 id="photos"
                 InputLabelProps={{ shrink: true }}
               />
-            </Grid>
+            </Grid> */}
           </Grid>
           <Button
             type="submit"

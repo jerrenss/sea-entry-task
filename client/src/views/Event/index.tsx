@@ -119,11 +119,10 @@ const Event: React.FC<EventProps> = (props) => {
 
   const onRegisterChange = (e) => {
     const isRegisterAction = !register
-    setRegister(isRegisterAction)
     if (isRegisterAction) {
       createRegistration(id)
         .then((res) => {
-          console.log('Success')
+          setRegister(isRegisterAction)
         })
         .catch((err) => {
           alert(err.response.data.error)
@@ -131,7 +130,7 @@ const Event: React.FC<EventProps> = (props) => {
     } else {
       deleteRegistration(id)
         .then((res) => {
-          console.log('Success')
+          setRegister(isRegisterAction)
         })
         .catch((err) => {
           alert(err.response.data.error)
@@ -141,11 +140,10 @@ const Event: React.FC<EventProps> = (props) => {
 
   const onLikeChange = (e) => {
     const isLikeAction = !like
-    setLike(isLikeAction)
     if (isLikeAction) {
       createLike(id)
         .then((res) => {
-          console.log('Success')
+          setLike(isLikeAction)
         })
         .catch((err) => {
           alert(err.response.data.error)
@@ -153,7 +151,7 @@ const Event: React.FC<EventProps> = (props) => {
     } else {
       deleteLike(id)
         .then((res) => {
-          console.log('Success')
+          setLike(isLikeAction)
         })
         .catch((err) => {
           alert(err.response.data.error)
