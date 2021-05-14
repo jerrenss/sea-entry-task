@@ -17,7 +17,7 @@ func ExtractToken(r *http.Request) string {
 	return cookie.Value
 }
 
-func VerifyToken(r *http.Request) (*jwt.Token, error) {
+func VerifyToken(r *http.Request) (*jwt.Token, jwt.MapClaims, error) {
 	tokenString := ExtractToken(r)
 	claims := jwt.MapClaims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
@@ -27,33 +27,32 @@ func VerifyToken(r *http.Request) (*jwt.Token, error) {
 		return []byte(os.Getenv("ACCESS_SECRET")), nil
 	})
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	// if claims["is_admin"] != nil {
-	// 	return nil, errors.New("Not an admin")
-	// }
-	return token, nil
+	return token, claims, nil
 }
 
-func TokenValid(r *http.Request) error {
-	token, err := VerifyToken(r)
+func TokenValid(r *http.Request) (jwt.MapClaims, error) {
+	token, claims, err := VerifyToken(r)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if _, ok := token.Claims.(jwt.Claims); !ok && !token.Valid {
-		return err
+		return nil, err
 	}
-	return nil
+	return claims, nil
 }
 
 func ValidateAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		err := TokenValid(c.Request)
+		claims, err := TokenValid(c.Request)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorised - " + err.Error()})
 			c.Abort()
 			return
 		}
+		c.Set("is_admin", claims["is_admin"])
+		c.Set("user_id", claims["user_id"])
 		c.Next()
 	}
 }
