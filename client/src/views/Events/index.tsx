@@ -4,7 +4,6 @@ import MaterialTable from 'material-table'
 import Layout from '../../components/Layout'
 import { useRouter } from 'next/router'
 import { getAllEvents } from '../../services/events'
-import { Typography } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({}))
 
@@ -39,9 +38,9 @@ const Events: React.FC = (props) => {
         ]}
         data={events}
         title="Events List"
-        onRowClick={(event, rowData, togglePanel) => {
-          console.log('Clicked: ' + rowData.id)
-          router.push('/client/event')
+        onChangePage={(page) => console.log(`Page ${page}`)}
+        onRowClick={(event, rowData) => {
+          router.push(`/client/event/${rowData.event_id}`)
         }}
       />
     </Layout>

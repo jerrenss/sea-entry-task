@@ -14,6 +14,10 @@ export default function MyApp(props: AppProps) {
     if (jssStyles) {
       jssStyles.parentElement!.removeChild(jssStyles)
     }
+    // Remove react-beautiful-dnd logs in development mode.
+    if (typeof window !== 'undefined') {
+      window['__react-beautiful-dnd-disable-dev-warnings'] = true
+    }
   }, [])
 
   return (
