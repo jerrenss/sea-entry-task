@@ -9,7 +9,7 @@ import { getSingleEvent } from '../../services/events'
 import RegistrationModal from '../../components/Modals/RegistrationModal'
 import LikesModal from '../../components/Modals/LikesModal'
 import CommentsModal from '../../components/Modals/CommentsModal'
-import { getEventLikes } from '../../services/likes'
+import { createLike, deleteLike, getEventLikes } from '../../services/likes'
 import {
   createRegistration,
   deleteRegistration,
@@ -96,6 +96,7 @@ const Event: React.FC<EventProps> = (props) => {
       getEventLikes(id)
         .then((res) => {
           setAllLikes(res.data.data)
+          setLike(res.data.userLiked)
         })
         .catch((err) => {
           alert(err.response.data.error)
@@ -118,7 +119,6 @@ const Event: React.FC<EventProps> = (props) => {
 
   const onRegisterChange = (e) => {
     const isRegisterAction = !register
-    console.log(isRegisterAction)
     setRegister(isRegisterAction)
     if (isRegisterAction) {
       createRegistration(id)
@@ -139,10 +139,32 @@ const Event: React.FC<EventProps> = (props) => {
     }
   }
 
+  const onLikeChange = (e) => {
+    const isLikeAction = !like
+    setLike(isLikeAction)
+    if (isLikeAction) {
+      createLike(id)
+        .then((res) => {
+          console.log('Success')
+        })
+        .catch((err) => {
+          alert(err.response.data.error)
+        })
+    } else {
+      deleteLike(id)
+        .then((res) => {
+          console.log('Success')
+        })
+        .catch((err) => {
+          alert(err.response.data.error)
+        })
+    }
+  }
+
   return (
     <Layout>
       <Box className={classes.root}>
-        <Typography variant="h6">{event?.title}</Typography>
+        <Typography variant="h6">{`#${event?.event_id} ${event?.title}`}</Typography>
         <Box className={classes.toggleWrapper}>
           <ToggleButton
             classes={{ selected: classes.selected }}
@@ -161,9 +183,7 @@ const Event: React.FC<EventProps> = (props) => {
             classes={{ selected: classes.selected }}
             value="check"
             selected={like}
-            onChange={() => {
-              setLike(!like)
-            }}
+            onChange={onLikeChange}
           >
             <>
               <ThumbUpIcon />
@@ -195,8 +215,8 @@ const Event: React.FC<EventProps> = (props) => {
           </Box>
         </Box>
       </Box>
-      <Typography>{JSON.stringify(allLikes)}</Typography>
-      <Typography>{JSON.stringify(allRegistrations)}</Typography>
+      {/* <Typography>{JSON.stringify(allLikes)}</Typography>
+      <Typography>{JSON.stringify(allRegistrations)}</Typography> */}
     </Layout>
   )
 }

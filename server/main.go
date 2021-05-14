@@ -58,8 +58,10 @@ func main() {
 
 	// Likes Routes
 	Router.GET("/api/likes", controllers.GetAllLikes)
-	Router.GET("/api/likes/event/:eventId", controllers.GetEventLikes)
-	Router.POST("/api/likes/create", controllers.CreateLike)
+	Router.GET("/api/likes/event/:eventId", controllers.ValidateAuth(), controllers.GetEventLikes)
+	Router.GET("/api/likes/create/:eventId", controllers.ValidateAuth(), controllers.CreateLike)
+	Router.DELETE("/api/likes/delete/:eventId", controllers.ValidateAuth(), controllers.DeleteLike)
+	Router.POST("/api/likes/create", controllers.CreateLikeManual)
 
 	// Comments Routes
 	Router.GET("/api/comments", controllers.GetAllComments)
