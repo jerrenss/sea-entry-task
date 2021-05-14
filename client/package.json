@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build && next export",
-    "dev": "next dev",
+    "dev": "nodemon -w server.js server.js",
     "start": "next start",
     "test": "jest --verbose",
     "server": "json-server -p3003 --watch db.json"
@@ -26,6 +26,8 @@
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-react": "^7.20.6",
     "eslint-plugin-react-hooks": "^4.1.0",
+    "express": "^4.17.1",
+    "http-proxy-middleware": "^2.0.0",
     "js-cookie": "^2.2.1",
     "json-2-csv": "^3.7.12",
     "jsonwebtoken": "^8.5.1",

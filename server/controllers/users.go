@@ -4,6 +4,7 @@ import (
 	"event-server/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 type CreateUserInput struct {
@@ -92,6 +93,7 @@ func LoginUser(c *gin.Context) {
 
 	// Set cookie and return respose to client
 	c.SetCookie("jwt", token, 3600, "/", "localhost", false, true)
+	c.SetCookie("admin", strconv.FormatBool(user.Is_Admin), 3600, "/", "localhost", false, false)
 
 	c.JSON(http.StatusOK, gin.H{"data": "Login successful!"})
 
@@ -107,6 +109,7 @@ func SignoutUser(c *gin.Context) {
 
 	// Set cookie and return respose to client
 	c.SetCookie("jwt", token, -1, "/", "localhost", false, true)
+	c.SetCookie("admin", "expired", -1, "/", "localhost", false, false)
 
 	c.JSON(http.StatusOK, gin.H{"data": "Signout successful!"})
 

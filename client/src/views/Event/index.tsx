@@ -68,7 +68,6 @@ const Event: React.FC<EventProps> = (props) => {
   const [like, setLike] = useState(false)
   const [register, setRegister] = useState(false)
   const [event, setEvent] = useState<IEvent>(null)
-  console.log(Cookies.get('jwt'))
 
   useEffect(() => {
     if (!isNaN(parseInt(id))) {
