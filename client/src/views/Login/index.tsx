@@ -3,8 +3,6 @@ import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import TextField from '@material-ui/core/TextField'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
 import Link from '@material-ui/core/Link'
 import Box from '@material-ui/core/Box'
 import Grid from '@material-ui/core/Grid'
@@ -12,8 +10,7 @@ import OpacityIcon from '@material-ui/icons/Opacity'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
-import userService from '../../services/users'
-import { VOUCH_PORTAL_URL } from '../../config'
+import { loginUser } from '../../services/auth'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -78,8 +75,19 @@ const Login: React.FC = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(`Username: ${username}, Password: ${password}`)
-    router.push('/client/home')
+    const credentials = {
+      username,
+      password,
+    }
+    loginUser(credentials)
+      .then((res) => {
+        console.log('Success')
+        console.log(res.data.data)
+        router.push('/client/home')
+      })
+      .catch((err) => {
+        alert(err.response.data.error)
+      })
   }
 
   return (

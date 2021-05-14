@@ -3,6 +3,7 @@ package main
 import (
 	"event-server/controllers"
 	"event-server/models"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"log"
@@ -13,6 +14,7 @@ var Router *gin.Engine
 func main() {
 	Router = gin.Default()
 	Router.Static("/uploads", "./uploads")
+	Router.Use(cors.Default())
 
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
