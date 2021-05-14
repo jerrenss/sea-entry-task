@@ -78,7 +78,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
           <OpacityIcon className={classes.icon} />
           <Box className={classes.personalization}>
             <Typography className={classes.title}>SeaEvents</Typography>
-            <Typography className={classes.status}>Admin</Typography>
+            <Typography className={classes.status}>v0.1</Typography>
           </Box>
           <Box className={classes.navigation}>
             <Link href="/admin/create-event" passHref>

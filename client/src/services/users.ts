@@ -11,3 +11,7 @@ interface CreateUserInput {
 export const createUser = (createUserInput: CreateUserInput) => {
   return apiClient.post(`/users/create`, createUserInput)
 }
+
+export const getSingleUser = () => {
+  return apiClient.get(`/users/current`)
+}

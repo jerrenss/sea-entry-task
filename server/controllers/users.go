@@ -27,9 +27,11 @@ func GetAllUsers(c *gin.Context) {
 }
 
 func GetSingleUser(c *gin.Context) {
+	user_id, _ := c.Get("user_id")
+
 	var user models.Users
 
-	if err := models.DB.Where("user_id = ?", c.Param("userId")).First(&user).Error; err != nil {
+	if err := models.DB.Where("user_id = ?", ProcessUserId(user_id)).First(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found!"})
 		return
 	}

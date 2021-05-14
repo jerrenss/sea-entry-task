@@ -33,14 +33,14 @@ func main() {
 
 	// User Routes
 	Router.GET("/api/users", controllers.GetAllUsers)
-	Router.GET("/api/users/:userId", controllers.GetSingleUser)
+	Router.GET("/api/users/current", controllers.ValidateAuth(), controllers.GetSingleUser)
 	Router.POST("/api/users/create", controllers.CreateUser)
 	Router.POST("/api/users/login", controllers.LoginUser)
-	Router.GET("/api/users/signout", controllers.SignoutUser)
+	Router.GET("/api/users/signout", controllers.ValidateAuth(), controllers.SignoutUser)
 
 	// Event Routes
 	Router.GET("/api/events", controllers.ValidateAuth(), controllers.GetAllEvents)
-	Router.GET("/api/events/:eventId", controllers.GetSingleEvent)
+	Router.GET("/api/events/:eventId", controllers.ValidateAuth(), controllers.GetSingleEvent)
 	Router.POST("/api/events/create", controllers.CreateEvent)
 
 	// Photo Routes
