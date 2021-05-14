@@ -35,14 +35,14 @@ func CreateEvent(c *gin.Context) {
 	// Validate input
 	var input CreateEventInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Input mismatch!"})
 		return
 	}
 
 	// Create event
 	event := models.Events{Title: input.Title, Description: input.Description, Event_Date: input.Event_Date, Location: input.Location, Category: input.Category}
 	if err := models.DB.Create(&event).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Creation of event failed!"})
 		return
 	}
 

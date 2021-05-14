@@ -34,14 +34,14 @@ func CreateRegistration(c *gin.Context) {
 	// Validate input
 	var input CreateRegistrationInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Input mismatch!"})
 		return
 	}
 
 	// Create registration
 	registration := models.Registers{User_Id: input.User_Id, Event_Id: input.Event_Id}
 	if err := models.DB.Create(&registration).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Creation of registration failed!"})
 		return
 	}
 

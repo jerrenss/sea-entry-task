@@ -37,14 +37,14 @@ func CreateComment(c *gin.Context) {
 	// Validate input
 	var input CreateCommentInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Input mismatch!"})
 		return
 	}
 
 	// Create comment
 	comment := models.Comments{User_Id: input.User_Id, Event_Id: input.Event_Id, Content: input.Content}
 	if err := models.DB.Create(&comment).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Creation of comment failed!"})
 		return
 	}
 

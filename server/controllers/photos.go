@@ -27,7 +27,7 @@ func UploadSinglePhoto(c *gin.Context) {
 	event_id := c.PostForm("event_id")
 	file, err := c.FormFile("photo")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Unable to extract photo!"})
 		return
 	}
 
@@ -36,7 +36,7 @@ func UploadSinglePhoto(c *gin.Context) {
 
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		if err := os.Mkdir(path, 0700); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Unable to create path!"})
 			return
 		}
 	}
@@ -45,20 +45,20 @@ func UploadSinglePhoto(c *gin.Context) {
 
 	// Upload photo
 	if err := c.SaveUploadedFile(file, filename); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Unable to save file!"})
 		return
 	}
 
 	photoUrl := filename[2:]
 	eventId, err := strconv.ParseUint(string(event_id), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Unable to parse event ID!"})
 	}
 
 	// Save photo information in DB
 	photo := models.Photos{Event_Id: eventId, Photo_Url: photoUrl}
 	if err := models.DB.Create(&photo).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Could not save photo information to database!"})
 		return
 	}
 
@@ -70,7 +70,7 @@ func UploadMultiplePhotos(c *gin.Context) {
 	event_id := c.PostForm("event_id")
 	form, err := c.MultipartForm()
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Unable to extract photos!"})
 		return
 	}
 
@@ -82,7 +82,7 @@ func UploadMultiplePhotos(c *gin.Context) {
 
 		if _, err := os.Stat(path); os.IsNotExist(err) {
 			if err := os.Mkdir(path, 0700); err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				c.JSON(http.StatusBadRequest, gin.H{"error": "Unable to create path!"})
 				return
 			}
 		}
@@ -91,20 +91,20 @@ func UploadMultiplePhotos(c *gin.Context) {
 
 		// Upload photo
 		if err := c.SaveUploadedFile(file, filename); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Unable to save file!"})
 			return
 		}
 
 		photoUrl := filename[2:]
 		eventId, err := strconv.ParseUint(string(event_id), 10, 64)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Unable to parse event ID!"})
 		}
 
 		// Save photo information in DB
 		photo := models.Photos{Event_Id: eventId, Photo_Url: photoUrl}
 		if err := models.DB.Create(&photo).Error; err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Could not save photo information to database!"})
 			return
 		}
 	}

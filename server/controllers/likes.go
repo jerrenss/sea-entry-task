@@ -35,14 +35,14 @@ func CreateLike(c *gin.Context) {
 	// Validate input
 	var input CreateLikeInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Input mismatch!"})
 		return
 	}
 
 	// Create like
 	like := models.Likes{User_Id: input.User_Id, Event_Id: input.Event_Id}
 	if err := models.DB.Create(&like).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Creation of like failed!"})
 		return
 	}
 

@@ -40,21 +40,21 @@ func CreateUser(c *gin.Context) {
 	// Validate input
 	var input CreateUserInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Input mismatch!"})
 		return
 	}
 
 	// Hash password
 	hashedPassword, err := models.Hash(input.Password_Hash)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Unable to hash password!"})
 		return
 	}
 
 	// Create user
 	user := models.Users{First_Name: input.First_Name, Last_Name: input.Last_Name, Username: input.Username, Password_Hash: string(hashedPassword), Is_Admin: input.Is_Admin}
 	if err := models.DB.Create(&user).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Creation of user failed!"})
 		return
 	}
 
@@ -65,7 +65,7 @@ func LoginUser(c *gin.Context) {
 	var input LoginInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Input mismatch!"})
 		return
 	}
 
