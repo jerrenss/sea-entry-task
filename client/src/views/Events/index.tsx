@@ -103,6 +103,17 @@ const Events: React.FC = (props) => {
     return Math.ceil(value / 10)
   }
 
+  const handleIncreasePage = () => {
+    if (page < divisionAndCeiling(eventsCount)) {
+      setPage(page + 1)
+    }
+  }
+
+  const handleDecreasePage = () => {
+    if (page > 1) {
+      setPage(page - 1)
+    }
+  }
   return (
     <Layout>
       <MaterialTable
@@ -125,7 +136,7 @@ const Events: React.FC = (props) => {
       <Box className={classes.paginationWrapper}>
         <ArrowLeftIcon
           className={classes.arrowIcon}
-          onClick={() => setPage(page - 1)}
+          onClick={handleDecreasePage}
         />
         <Select value={page} onChange={handleSelect} input={<BootstrapInput />}>
           {[...Array(divisionAndCeiling(eventsCount))].map((e, i) => (
@@ -139,7 +150,7 @@ const Events: React.FC = (props) => {
         )}`}</Typography>
         <ArrowRightIcon
           className={classes.arrowIcon}
-          onClick={() => setPage(page + 1)}
+          onClick={handleIncreasePage}
         />
       </Box>
     </Layout>
