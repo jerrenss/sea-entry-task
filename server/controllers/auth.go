@@ -56,3 +56,23 @@ func ValidateAuth() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func ValidateAdmin() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		is_admin, _ := c.Get("is_admin")
+		if !is_admin.(bool) {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorised access on admin resource"})
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
+}
+
+func IsLoggedInUser(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"data": "User logged in"})
+}
+
+func IsLoggedInAdmin(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"data": "Admin logged in"})
+}

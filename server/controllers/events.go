@@ -4,6 +4,7 @@ import (
 	"event-server/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 type CreateEventInput struct {
@@ -14,20 +15,34 @@ type CreateEventInput struct {
 	Category    string `json:"category" binding:"required"`
 }
 
+type EventResult struct {
+	Event_Id    uint64
+	Created_At  string
+	Title       string
+	Description string
+	Event_Date  string
+	Location    string
+	Category    string
+	Photo_Url   string
+}
+
 func GetAllEvents(c *gin.Context) {
 	var events []models.Events
-	models.DB.Find(&events)
+	page := c.Request.URL.Query().Get("page")
+	pageInt, _ := strconv.Atoi(page)
+	models.DB.Limit(10).Offset(10 * (pageInt - 1)).Order("created_at").Find(&events)
 	c.JSON(http.StatusOK, gin.H{"data": events})
 }
 
+func GetEventsCount(c *gin.Context) {
+	var count int
+	models.DB.Model(models.Events{}).Count(&count)
+	c.JSON(http.StatusOK, gin.H{"data": count})
+}
+
 func GetSingleEvent(c *gin.Context) {
-	var event models.Events
-
-	if err := models.DB.Where("event_id = ?", c.Param("eventId")).First(&event).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
-		return
-	}
-
+	var event EventResult
+	models.DB.Model(models.Events{}).Select("events.event_id, events.created_at, events.title, events.description, events.event_date, events.location, events.category, photos.photo_url").Joins("left join photos on events.event_id = photos.event_id").Where("events.event_id = ?", c.Param("eventId")).Scan(&event)
 	c.JSON(http.StatusOK, gin.H{"data": event})
 }
 

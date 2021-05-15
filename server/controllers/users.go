@@ -4,7 +4,6 @@ import (
 	"event-server/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"strconv"
 )
 
 type CreateUserInput struct {
@@ -31,7 +30,7 @@ func GetSingleUser(c *gin.Context) {
 
 	var user models.Users
 
-	if err := models.DB.Where("user_id = ?", ProcessUserId(user_id)).First(&user).Error; err != nil {
+	if err := models.DB.Select("users.user_id, users.created_at, users.first_name, users.last_name, users.username, users.is_admin").Where("user_id = ?", ProcessUserId(user_id)).First(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found!"})
 		return
 	}
@@ -95,7 +94,6 @@ func LoginUser(c *gin.Context) {
 
 	// Set cookie and return respose to client
 	c.SetCookie("jwt", token, 3600, "/", "localhost", false, true)
-	c.SetCookie("admin", strconv.FormatBool(user.Is_Admin), 3600, "/", "localhost", false, false)
 
 	c.JSON(http.StatusOK, gin.H{"data": "Login successful!"})
 
@@ -111,7 +109,6 @@ func SignoutUser(c *gin.Context) {
 
 	// Set cookie and return respose to client
 	c.SetCookie("jwt", token, -1, "/", "localhost", false, true)
-	c.SetCookie("admin", "expired", -1, "/", "localhost", false, false)
 
 	c.JSON(http.StatusOK, gin.H{"data": "Signout successful!"})
 

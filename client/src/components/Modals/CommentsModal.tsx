@@ -15,6 +15,7 @@ import {
 } from '@material-ui/core'
 import PersonIcon from '@material-ui/icons/Person'
 import { createComment, getEventComments } from '../../services/comments'
+import { convertTimestampExact } from '../../utils'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,6 +34,8 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2, 4, 3),
     },
     list: {
+      display: 'flex',
+      flexDirection: 'column-reverse',
       overflowY: 'scroll',
       height: '80%',
     },
@@ -56,15 +59,19 @@ const CommentModal: React.FC<CommentModalProps> = (props) => {
 
   React.useEffect(() => {
     if (!isNaN(parseInt(id))) {
-      getEventComments(id)
-        .then((res) => {
-          setAllComments(res.data.data)
-        })
-        .catch((err) => {
-          alert(err.response.data.error)
-        })
+      fetchComments()
     }
   }, [id])
+
+  const fetchComments = () => {
+    getEventComments(id)
+      .then((res) => {
+        setAllComments(res.data.data)
+      })
+      .catch((err) => {
+        alert(err.response.data.error)
+      })
+  }
 
   const handleOpen = () => {
     setOpen(true)
@@ -85,6 +92,7 @@ const CommentModal: React.FC<CommentModalProps> = (props) => {
       createComment(createCommentInput)
         .then((res) => {
           setContent('')
+          fetchComments()
         })
         .catch((err) => {
           alert(err.response.data.error)
@@ -116,13 +124,19 @@ const CommentModal: React.FC<CommentModalProps> = (props) => {
             <Typography variant="h6">{`Comments (${allComments.length})`}</Typography>
             <List dense={true} className={classes.list}>
               {allComments.map(
-                ({ First_Name, Last_Name, Username, Content }) => {
+                ({ First_Name, Last_Name, Username, Content, CreatedAt }) => {
                   return (
                     <ListItem>
                       <ListItemIcon>
                         <PersonIcon />
                       </ListItemIcon>
-                      <ListItemText>{`${First_Name} ${Last_Name} @${Username}: ${Content}`}</ListItemText>
+                      <ListItemText
+                        primary={`${First_Name} ${Last_Name} @${Username} (${convertTimestampExact(
+                          CreatedAt,
+                        )}):`}
+                        secondary={`${Content}`}
+                      />
+                      {/* <ListItemText>{`${First_Name} ${Last_Name} @${Username}: ${Content}`}</ListItemText> */}
                     </ListItem>
                   )
                 },

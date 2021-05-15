@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import makeStyles from '@material-ui/core/styles/makeStyles'
-import { Box, Typography, Button } from '@material-ui/core'
+import { Box, Typography } from '@material-ui/core'
 import Layout from '../../components/Layout'
 import { ToggleButton } from '@material-ui/lab'
 import ThumbUpIcon from '@material-ui/icons/ThumbUp'
@@ -15,6 +15,7 @@ import {
   deleteRegistration,
   getEventRegistrations,
 } from '../../services/registers'
+import UserRoute from '../../components/Authentication/UserRoute'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -61,13 +62,14 @@ interface EventProps {
 }
 
 interface IEvent {
-  event_id: number
-  created_at: string
-  title: string
-  description: string
-  event_date: string
-  location: string
-  category: string
+  Event_Id: number
+  Created_At: string
+  Title: string
+  Description: string
+  Event_Date: string
+  Location: string
+  Category: string
+  Photo_Url: string
 }
 
 const Event: React.FC<EventProps> = (props) => {
@@ -160,60 +162,65 @@ const Event: React.FC<EventProps> = (props) => {
   }
 
   return (
-    <Layout>
-      <Box className={classes.root}>
-        <Typography variant="h6">{`#${event?.event_id} ${event?.title}`}</Typography>
-        <Box className={classes.toggleWrapper}>
-          <ToggleButton
-            classes={{ selected: classes.selected }}
-            value="check"
-            selected={register}
-            onChange={onRegisterChange}
-          >
-            <>
-              <LibraryBooksIcon />
-              <Typography className={classes.toggleText}>
-                {register ? 'Registered' : 'Register'}
-              </Typography>
-            </>
-          </ToggleButton>
-          <ToggleButton
-            classes={{ selected: classes.selected }}
-            value="check"
-            selected={like}
-            onChange={onLikeChange}
-          >
-            <>
-              <ThumbUpIcon />
-              <Typography className={classes.toggleText}>
-                {like ? 'Liked' : 'Like'}
-              </Typography>
-            </>
-          </ToggleButton>
-        </Box>
-        <Box className={classes.content}>
-          {/* TODO: Dynamically render image */}
-          <img
-            src="/login-banner.png"
-            alt="Event Banner"
-            className={classes.image}
-          />
-          <Typography variant="subtitle2">Description</Typography>
-          <Typography>{event?.description}</Typography>
-          <Typography variant="subtitle2">Location</Typography>
-          <Typography>{event?.location}</Typography>
-          <Typography variant="subtitle2">Event Date</Typography>
-          <Typography>{event?.event_date}</Typography>
-          <Typography variant="subtitle2">Category</Typography>
-          <Typography>{event?.category}</Typography>
-          <Box className={classes.buttonWrapper}>
-            <RegistrationModal content={allRegistrations} />
-            <LikesModal content={allLikes} />
-            <CommentsModal id={id} />
+    <UserRoute>
+      <Layout>
+        <Box className={classes.root}>
+          <Typography variant="h6">{`#${event?.Event_Id} ${event?.Title}`}</Typography>
+          <Box className={classes.toggleWrapper}>
+            <ToggleButton
+              classes={{ selected: classes.selected }}
+              value="check"
+              selected={register}
+              onChange={onRegisterChange}
+            >
+              <>
+                <LibraryBooksIcon />
+                <Typography className={classes.toggleText}>
+                  {register ? 'Registered' : 'Register'}
+                </Typography>
+              </>
+            </ToggleButton>
+            <ToggleButton
+              classes={{ selected: classes.selected }}
+              value="check"
+              selected={like}
+              onChange={onLikeChange}
+            >
+              <>
+                <ThumbUpIcon />
+                <Typography className={classes.toggleText}>
+                  {like ? 'Liked' : 'Like'}
+                </Typography>
+              </>
+            </ToggleButton>
+          </Box>
+          <Box className={classes.content}>
+            <img
+              src={
+                event?.Photo_Url
+                  ? `${process.env.NEXT_PUBLIC_DEV_PHOTO_SERVER_URL}${event?.Photo_Url}`
+                  : '/login-banner.png'
+              }
+              alt="Event Banner"
+              className={classes.image}
+            />
+            <Typography variant="subtitle2">Description</Typography>
+            <Typography>{event?.Description}</Typography>
+            <Typography variant="subtitle2">Location</Typography>
+            <Typography>{event?.Location}</Typography>
+            <Typography variant="subtitle2">Event Date</Typography>
+            <Typography>{event?.Event_Date}</Typography>
+            <Typography variant="subtitle2">Category</Typography>
+            <Typography>{event?.Category}</Typography>
+            <Box className={classes.buttonWrapper}>
+              <RegistrationModal content={allRegistrations} />
+              <LikesModal content={allLikes} />
+              <CommentsModal id={id} />
+            </Box>
           </Box>
         </Box>
-      </Box>
-    </Layout>
+      </Layout>
+    </UserRoute>
   )
 }
 

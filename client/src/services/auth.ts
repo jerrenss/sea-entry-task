@@ -12,3 +12,11 @@ export const loginUser = (credentials: LoginInput) => {
 export const signoutUser = () => {
   return apiClient.get(`/users/signout`)
 }
+
+export const isLoggedInUser = () => {
+  return apiClient.get(`/auth/user`)
+}
+
+export const isLoggedInAdmin = () => {
+  return apiClient.get(`/auth/admin`)
+}

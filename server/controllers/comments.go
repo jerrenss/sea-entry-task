@@ -35,7 +35,7 @@ func GetAllComments(c *gin.Context) {
 
 func GetEventComments(c *gin.Context) {
 	var commentResult []CommentResult
-	models.DB.Model(models.Comments{}).Select("comments.user_id, comments.event_id, comments.content, comments.created_at, users.first_name, users.last_name, users.username").Joins("join users on comments.user_id = users.user_id").Where("event_id = ?", c.Param("eventId")).Scan(&commentResult)
+	models.DB.Model(models.Comments{}).Select("comments.user_id, comments.event_id, comments.content, comments.created_at, users.first_name, users.last_name, users.username").Joins("join users on comments.user_id = users.user_id").Where("event_id = ?", c.Param("eventId")).Order("comments.created_at desc").Scan(&commentResult)
 	c.JSON(http.StatusOK, gin.H{"data": commentResult})
 }
 

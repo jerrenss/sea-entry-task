@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Box, Typography, Button } from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar'
@@ -7,7 +7,7 @@ import OpacityIcon from '@material-ui/icons/Opacity'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { signoutUser } from '../services/auth'
+import { isLoggedInAdmin, signoutUser } from '../services/auth'
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -59,12 +59,23 @@ const Navbar: React.FC<NavbarProps> = (props) => {
   const { rootStyles } = props
   const classes = useStyles()
   const router = useRouter()
+  const [admin, setAdmin] = useState(null)
+
+  useEffect(() => {
+    isLoggedInAdmin()
+      .then((res) => {
+        setAdmin(true)
+      })
+      .catch((err) => {
+        setAdmin(false)
+      })
+  }, [])
 
   const onSignOut = (e) => {
     e.preventDefault()
     signoutUser()
       .then((res) => {
-        router.push('/login')
+        router.push('/')
       })
       .catch((err) => {
         alert(err.response.data.error)
@@ -81,10 +92,12 @@ const Navbar: React.FC<NavbarProps> = (props) => {
             <Typography className={classes.status}>v0.1</Typography>
           </Box>
           <Box className={classes.navigation}>
-            <Link href="/admin/create-event" passHref>
-              <Button className={classes.button}>Create Event</Button>
-            </Link>
-            <Link href="/client/home" passHref>
+            {admin !== null && admin && (
+              <Link href="/admin/create-event" passHref>
+                <Button className={classes.button}>Create Event</Button>
+              </Link>
+            )}
+            <Link href="/user/home" passHref>
               <Button className={classes.button}>Home</Button>
             </Link>
             <Button
