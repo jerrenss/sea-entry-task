@@ -15,6 +15,7 @@ import {
   makeStyles,
 } from '@material-ui/core'
 import classes from '*.module.css'
+import UserRoute from '../../components/Authentication/UserRoute'
 
 const useStyles = makeStyles((theme) => ({
   paginationWrapper: {
@@ -115,45 +116,51 @@ const Events: React.FC = (props) => {
     }
   }
   return (
-    <Layout>
-      <MaterialTable
-        options={{
-          paging: false,
-        }}
-        columns={[
-          { title: 'ID', field: 'event_id' },
-          { title: 'Title', field: 'title' },
-          { title: 'Event Date', field: 'event_date' },
-          { title: 'Location', field: 'location' },
-          { title: 'Category', field: 'category' },
-        ]}
-        data={events}
-        title={`Events List (${eventsCount})`}
-        onRowClick={(event, rowData) => {
-          router.push(`/client/event/${rowData.event_id}`)
-        }}
-      />
-      <Box className={classes.paginationWrapper}>
-        <ArrowLeftIcon
-          className={classes.arrowIcon}
-          onClick={handleDecreasePage}
+    <UserRoute>
+      <Layout>
+        <MaterialTable
+          options={{
+            paging: false,
+          }}
+          columns={[
+            { title: 'ID', field: 'event_id' },
+            { title: 'Title', field: 'title' },
+            { title: 'Event Date', field: 'event_date' },
+            { title: 'Location', field: 'location' },
+            { title: 'Category', field: 'category' },
+          ]}
+          data={events}
+          title={`Events List (${eventsCount})`}
+          onRowClick={(event, rowData) => {
+            router.push(`/user/event/${rowData.event_id}`)
+          }}
         />
-        <Select value={page} onChange={handleSelect} input={<BootstrapInput />}>
-          {[...Array(divisionAndCeiling(eventsCount))].map((e, i) => (
-            <MenuItem value={i + 1} key={i + 1}>
-              {i + 1}
-            </MenuItem>
-          ))}
-        </Select>
-        <Typography className={classes.pageTotal}>{`/ ${divisionAndCeiling(
-          eventsCount,
-        )}`}</Typography>
-        <ArrowRightIcon
-          className={classes.arrowIcon}
-          onClick={handleIncreasePage}
-        />
-      </Box>
-    </Layout>
+        <Box className={classes.paginationWrapper}>
+          <ArrowLeftIcon
+            className={classes.arrowIcon}
+            onClick={handleDecreasePage}
+          />
+          <Select
+            value={page}
+            onChange={handleSelect}
+            input={<BootstrapInput />}
+          >
+            {[...Array(divisionAndCeiling(eventsCount))].map((e, i) => (
+              <MenuItem value={i + 1} key={i + 1}>
+                {i + 1}
+              </MenuItem>
+            ))}
+          </Select>
+          <Typography className={classes.pageTotal}>{`/ ${divisionAndCeiling(
+            eventsCount,
+          )}`}</Typography>
+          <ArrowRightIcon
+            className={classes.arrowIcon}
+            onClick={handleIncreasePage}
+          />
+        </Box>
+      </Layout>
+    </UserRoute>
   )
 }
 

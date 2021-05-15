@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import makeStyles from '@material-ui/core/styles/makeStyles'
+import React from 'react'
 import Layout from '../../components/Layout'
 import Form from './Form'
+import AdminRoute from '../../components/Authentication/AdminRoute'
 
-const useStyles = makeStyles((theme) => ({}))
-
-const CreateEvent: React.FC = (props) => {
-  const classes = useStyles()
-
+const CreateEvent: React.FC = () => {
   return (
-    <Layout>
-      <Form />
-    </Layout>
+    <AdminRoute>
+      <Layout>
+        <Form />
+      </Layout>
+    </AdminRoute>
   )
 }
 

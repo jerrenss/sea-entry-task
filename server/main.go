@@ -31,6 +31,10 @@ func main() {
 		})
 	}
 
+	// Auth Routes
+	Router.GET("/api/auth/user", controllers.ValidateAuth(), controllers.IsLoggedInUser)
+	Router.GET("/api/auth/admin", controllers.ValidateAuth(), controllers.ValidateAdmin(), controllers.IsLoggedInAdmin)
+
 	// User Routes
 	Router.GET("/api/users", controllers.ValidateAuth(), controllers.GetAllUsers)
 	Router.GET("/api/users/current", controllers.ValidateAuth(), controllers.GetSingleUser)
@@ -42,7 +46,7 @@ func main() {
 	Router.GET("/api/events", controllers.ValidateAuth(), controllers.GetAllEvents)
 	Router.GET("/api/events/count", controllers.ValidateAuth(), controllers.GetEventsCount)
 	Router.GET("/api/events/:eventId", controllers.ValidateAuth(), controllers.GetSingleEvent)
-	Router.POST("/api/events/create", controllers.ValidateAuth(), controllers.CreateEvent)
+	Router.POST("/api/events/create", controllers.ValidateAuth(), controllers.ValidateAdmin(), controllers.CreateEvent)
 
 	// Photo Routes
 	Router.GET("/api/photos", controllers.ValidateAuth(), controllers.GetAllPhotos)

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -10,7 +10,7 @@ import OpacityIcon from '@material-ui/icons/Opacity'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
-import { loginUser } from '../../services/auth'
+import { isLoggedInUser, loginUser } from '../../services/auth'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,6 +65,14 @@ const Login: React.FC = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
+  useEffect(() => {
+    isLoggedInUser()
+      .then((res) => {
+        router.push('/user/home')
+      })
+      .catch((err) => err)
+  }, [])
+
   const handleUsernameChange = (e) => {
     setUsername(e.target.value)
   }
@@ -81,7 +89,7 @@ const Login: React.FC = () => {
     }
     loginUser(credentials)
       .then((res) => {
-        router.push('/client/home')
+        router.push('/user/home')
       })
       .catch((err) => {
         alert(err.response.data.error)

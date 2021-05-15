@@ -102,7 +102,7 @@ const Register: React.FC = () => {
     createUser(createUserInput)
       .then((res) => {
         alert(`User ${username} created successfully!`)
-        router.push('/login')
+        router.push('/')
       })
       .catch((err) => {
         alert(err.response.data.error)

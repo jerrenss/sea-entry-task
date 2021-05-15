@@ -70,7 +70,9 @@ const Form: React.FC = (props) => {
   const [status, setStatus] = useState('')
 
   const onSubmit = (data) => {
-    data['event_date'] = convertTimestamp(selectedDate)
+    if (data['DatePicker'] !== null) {
+      data['event_date'] = convertTimestamp(selectedDate)
+    }
     createEvent(data)
       .then((res) => {
         const formData = new FormData()

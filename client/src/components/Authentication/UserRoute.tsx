@@ -1,33 +1,30 @@
-// import React, { useState, useEffect } from 'react'
-// import { isUser, isAdmin } from '../../services/authentication'
-// import Error from 'next/error'
+import React, { useState, useEffect } from 'react'
+import Error from 'next/error'
+import { isLoggedInUser } from '../../services/auth'
 
-// const UserRoute = (props) => {
-//   const { children } = props
-//   const [admin, setAdmin] = useState(null)
-//   const [user, setUser] = useState(null)
+const UserRoute = (props) => {
+  const { children } = props
+  const [user, setUser] = useState(null)
 
-//   useEffect(() => {
-//     setAdmin(isAdmin())
-//     setUser(isUser())
-//   }, [])
+  useEffect(() => {
+    isLoggedInUser()
+      .then((res) => {
+        setUser(true)
+      })
+      .catch((err) => {
+        setUser(false)
+      })
+  }, [])
 
-//   const redirect = (admin, user) => {
-//     if (admin || user) {
-//       return children
-//     } else {
-//       return <Error statusCode={403} title="Unauthorized access" />
-//     }
-//   }
+  const redirect = () => {
+    if (user) {
+      return children
+    } else {
+      return <Error statusCode={401} title="Unauthorized access" />
+    }
+  }
 
-//   return admin !== null && user !== null && <> {redirect(admin, user)} </>
-// }
-
-// export default UserRoute
-
-import React from 'react'
-const Temp: React.FC = (props) => {
-  return <h1>Temp</h1>
+  return user !== null && <> {redirect()} </>
 }
 
-export default Temp
+export default UserRoute
