@@ -1,11 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Box, Typography, Button } from '@material-ui/core'
-import { useRouter } from 'next/router'
 import Layout from '../../components/Layout'
 import { ToggleButton } from '@material-ui/lab'
 import ThumbUpIcon from '@material-ui/icons/ThumbUp'
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks'
+import { getSingleEvent } from '../../services/events'
+import RegistrationModal from '../../components/Modals/RegistrationModal'
+import LikesModal from '../../components/Modals/LikesModal'
+import CommentsModal from '../../components/Modals/CommentsModal'
+import { createLike, deleteLike, getEventLikes } from '../../services/likes'
+import {
+  createRegistration,
+  deleteRegistration,
+  getEventRegistrations,
+} from '../../services/registers'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -48,28 +57,118 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface EventProps {
-  rootStyles?: string
+  id: string
+}
+
+interface IEvent {
+  event_id: number
+  created_at: string
+  title: string
+  description: string
+  event_date: string
+  location: string
+  category: string
 }
 
 const Event: React.FC<EventProps> = (props) => {
-  const { rootStyles } = props
+  const { id } = props
   const classes = useStyles()
-  const router = useRouter()
-  const [like, setLike] = useState(false)
   const [register, setRegister] = useState(false)
+  const [like, setLike] = useState(false)
+  const [event, setEvent] = useState<IEvent>(null)
+  const [allRegistrations, setAllRegistrations] = useState([])
+  const [allLikes, setAllLikes] = useState([])
+
+  useEffect(() => {
+    if (!isNaN(parseInt(id))) {
+      getSingleEvent(id)
+        .then((res) => {
+          setEvent(res.data.data)
+        })
+        .catch((err) => {
+          alert(err.response.data.error)
+        })
+    }
+  }, [id])
+
+  useEffect(() => {
+    if (!isNaN(parseInt(id))) {
+      getEventLikes(id)
+        .then((res) => {
+          setAllLikes(res.data.data)
+          setLike(res.data.userLiked)
+        })
+        .catch((err) => {
+          alert(err.response.data.error)
+        })
+    }
+  }, [id, like])
+
+  useEffect(() => {
+    if (!isNaN(parseInt(id))) {
+      getEventRegistrations(id)
+        .then((res) => {
+          setAllRegistrations(res.data.data)
+          setRegister(res.data.userRegistered)
+        })
+        .catch((err) => {
+          alert(err.response.data.error)
+        })
+    }
+  }, [id, register])
+
+  const onRegisterChange = (e) => {
+    const isRegisterAction = !register
+    if (isRegisterAction) {
+      createRegistration(id)
+        .then((res) => {
+          setRegister(isRegisterAction)
+        })
+        .catch((err) => {
+          alert(err.response.data.error)
+        })
+    } else {
+      deleteRegistration(id)
+        .then((res) => {
+          setRegister(isRegisterAction)
+        })
+        .catch((err) => {
+          alert(err.response.data.error)
+        })
+    }
+  }
+
+  const onLikeChange = (e) => {
+    const isLikeAction = !like
+    if (isLikeAction) {
+      createLike(id)
+        .then((res) => {
+          setLike(isLikeAction)
+        })
+        .catch((err) => {
+          alert(err.response.data.error)
+        })
+    } else {
+      deleteLike(id)
+        .then((res) => {
+          setLike(isLikeAction)
+        })
+        .catch((err) => {
+          alert(err.response.data.error)
+        })
+    }
+  }
 
   return (
     <Layout>
       <Box className={classes.root}>
-        <Typography variant="h6">SunNUS</Typography>
+        <Typography variant="h6">{`#${event?.event_id} ${event?.title}`}</Typography>
         <Box className={classes.toggleWrapper}>
           <ToggleButton
             classes={{ selected: classes.selected }}
             value="check"
             selected={register}
-            onChange={() => {
-              setRegister(!register)
-            }}
+            onChange={onRegisterChange}
           >
             <>
               <LibraryBooksIcon />
@@ -82,9 +181,7 @@ const Event: React.FC<EventProps> = (props) => {
             classes={{ selected: classes.selected }}
             value="check"
             selected={like}
-            onChange={() => {
-              setLike(!like)
-            }}
+            onChange={onLikeChange}
           >
             <>
               <ThumbUpIcon />
@@ -95,37 +192,24 @@ const Event: React.FC<EventProps> = (props) => {
           </ToggleButton>
         </Box>
         <Box className={classes.content}>
+          {/* TODO: Dynamically render image */}
           <img
             src="/login-banner.png"
             alt="Event Banner"
             className={classes.image}
           />
           <Typography variant="subtitle2">Description</Typography>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
-          </Typography>
+          <Typography>{event?.description}</Typography>
           <Typography variant="subtitle2">Location</Typography>
-          <Typography>Sentosa Palawan Beach</Typography>
+          <Typography>{event?.location}</Typography>
           <Typography variant="subtitle2">Event Date</Typography>
-          <Typography>2021-05-28</Typography>
+          <Typography>{event?.event_date}</Typography>
           <Typography variant="subtitle2">Category</Typography>
-          <Typography>Sports</Typography>
+          <Typography>{event?.category}</Typography>
           <Box className={classes.buttonWrapper}>
-            <Button variant="contained" color="secondary">
-              View Registrations
-            </Button>
-            <Button variant="contained" color="secondary">
-              View Likes
-            </Button>
-            <Button variant="contained" color="secondary">
-              View Comments
-            </Button>
+            <RegistrationModal content={allRegistrations} />
+            <LikesModal content={allLikes} />
+            <CommentsModal id={id} />
           </Box>
         </Box>
       </Box>

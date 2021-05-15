@@ -4,14 +4,15 @@ import (
 	"event-server/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 type CreateUserInput struct {
-	First_Name    string `json:"first_name" binding:"required"`
-	Last_Name     string `json:"last_name" binding:"required"`
-	Username      string `json:"username" binding:"required"`
-	Password_Hash string `json:"password_hash" binding:"required"`
-	Is_Admin      bool   `json:"is_admin"`
+	First_Name string `json:"first_name" binding:"required"`
+	Last_Name  string `json:"last_name" binding:"required"`
+	Username   string `json:"username" binding:"required"`
+	Password   string `json:"password" binding:"required"`
+	Is_Admin   bool   `json:"is_admin"`
 }
 
 type LoginInput struct {
@@ -26,10 +27,12 @@ func GetAllUsers(c *gin.Context) {
 }
 
 func GetSingleUser(c *gin.Context) {
+	user_id, _ := c.Get("user_id")
+
 	var user models.Users
 
-	if err := models.DB.Where("user_id = ?", c.Param("userId")).First(&user).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+	if err := models.DB.Where("user_id = ?", ProcessUserId(user_id)).First(&user).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found!"})
 		return
 	}
 
@@ -40,21 +43,21 @@ func CreateUser(c *gin.Context) {
 	// Validate input
 	var input CreateUserInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Input mismatch!"})
 		return
 	}
 
 	// Hash password
-	hashedPassword, err := models.Hash(input.Password_Hash)
+	hashedPassword, err := models.Hash(input.Password)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Unable to hash password!"})
 		return
 	}
 
 	// Create user
 	user := models.Users{First_Name: input.First_Name, Last_Name: input.Last_Name, Username: input.Username, Password_Hash: string(hashedPassword), Is_Admin: input.Is_Admin}
 	if err := models.DB.Create(&user).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Creation of user failed!"})
 		return
 	}
 
@@ -65,7 +68,7 @@ func LoginUser(c *gin.Context) {
 	var input LoginInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Input mismatch!"})
 		return
 	}
 
@@ -92,6 +95,7 @@ func LoginUser(c *gin.Context) {
 
 	// Set cookie and return respose to client
 	c.SetCookie("jwt", token, 3600, "/", "localhost", false, true)
+	c.SetCookie("admin", strconv.FormatBool(user.Is_Admin), 3600, "/", "localhost", false, false)
 
 	c.JSON(http.StatusOK, gin.H{"data": "Login successful!"})
 
@@ -107,6 +111,7 @@ func SignoutUser(c *gin.Context) {
 
 	// Set cookie and return respose to client
 	c.SetCookie("jwt", token, -1, "/", "localhost", false, true)
+	c.SetCookie("admin", "expired", -1, "/", "localhost", false, false)
 
 	c.JSON(http.StatusOK, gin.H{"data": "Signout successful!"})
 
