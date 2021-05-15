@@ -99,12 +99,6 @@ const Form: React.FC = (props) => {
     }
   }
 
-  const onDateChange = (m) => {
-    console.log('Hi')
-    console.log(m.format('DD/MM/YYYY'))
-    setSelectedDate(m.format('DD/MM/YYYY'))
-  }
-
   return (
     <>
       <Box className={classes.root}>

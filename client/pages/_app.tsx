@@ -24,7 +24,7 @@ export default function MyApp(props: AppProps) {
   return (
     <React.Fragment>
       <Head>
-        <title>Events</title>
+        <title>SeaEvents</title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
