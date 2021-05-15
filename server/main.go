@@ -32,7 +32,7 @@ func main() {
 	}
 
 	// User Routes
-	Router.GET("/api/users", controllers.GetAllUsers)
+	Router.GET("/api/users", controllers.ValidateAuth(), controllers.GetAllUsers)
 	Router.GET("/api/users/current", controllers.ValidateAuth(), controllers.GetSingleUser)
 	Router.POST("/api/users/create", controllers.CreateUser)
 	Router.POST("/api/users/login", controllers.LoginUser)
@@ -40,14 +40,15 @@ func main() {
 
 	// Event Routes
 	Router.GET("/api/events", controllers.ValidateAuth(), controllers.GetAllEvents)
+	Router.GET("/api/events/count", controllers.ValidateAuth(), controllers.GetEventsCount)
 	Router.GET("/api/events/:eventId", controllers.ValidateAuth(), controllers.GetSingleEvent)
-	Router.POST("/api/events/create", controllers.CreateEvent)
+	Router.POST("/api/events/create", controllers.ValidateAuth(), controllers.CreateEvent)
 
 	// Photo Routes
-	Router.GET("/api/photos", controllers.GetAllPhotos)
-	Router.GET("/api/photos/:eventId", controllers.GetEventPhotos)
-	Router.POST("/api/photos/uploadSingle", controllers.UploadSinglePhoto)
-	Router.POST("/api/photos/uploadMultiple", controllers.UploadMultiplePhotos)
+	Router.GET("/api/photos", controllers.ValidateAuth(), controllers.GetAllPhotos)
+	Router.GET("/api/photos/:eventId", controllers.ValidateAuth(), controllers.GetEventPhotos)
+	Router.POST("/api/photos/uploadSingle", controllers.ValidateAuth(), controllers.UploadSinglePhoto)
+	Router.POST("/api/photos/uploadMultiple", controllers.ValidateAuth(), controllers.UploadMultiplePhotos)
 
 	// Registers Routes
 	Router.GET("/api/registers", controllers.ValidateAuth(), controllers.GetAllRegistrations)
@@ -57,7 +58,7 @@ func main() {
 	Router.POST("/api/registers/createManual", controllers.CreateRegistrationManual)
 
 	// Likes Routes
-	Router.GET("/api/likes", controllers.GetAllLikes)
+	Router.GET("/api/likes", controllers.ValidateAuth(), controllers.GetAllLikes)
 	Router.GET("/api/likes/event/:eventId", controllers.ValidateAuth(), controllers.GetEventLikes)
 	Router.GET("/api/likes/create/:eventId", controllers.ValidateAuth(), controllers.CreateLike)
 	Router.DELETE("/api/likes/delete/:eventId", controllers.ValidateAuth(), controllers.DeleteLike)

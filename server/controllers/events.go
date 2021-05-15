@@ -4,6 +4,7 @@ import (
 	"event-server/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 type CreateEventInput struct {
@@ -27,8 +28,16 @@ type EventResult struct {
 
 func GetAllEvents(c *gin.Context) {
 	var events []models.Events
-	models.DB.Find(&events)
+	page := c.Request.URL.Query().Get("page")
+	pageInt, _ := strconv.Atoi(page)
+	models.DB.Limit(10).Offset(10 * (pageInt - 1)).Order("created_at").Find(&events)
 	c.JSON(http.StatusOK, gin.H{"data": events})
+}
+
+func GetEventsCount(c *gin.Context) {
+	var count int
+	models.DB.Model(models.Events{}).Count(&count)
+	c.JSON(http.StatusOK, gin.H{"data": count})
 }
 
 func GetSingleEvent(c *gin.Context) {
