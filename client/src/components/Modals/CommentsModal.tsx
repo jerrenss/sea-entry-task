@@ -15,6 +15,7 @@ import {
 } from '@material-ui/core'
 import PersonIcon from '@material-ui/icons/Person'
 import { createComment, getEventComments } from '../../services/comments'
+import { convertTimestampExact } from '../../utils'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -103,22 +104,6 @@ const CommentModal: React.FC<CommentModalProps> = (props) => {
     setContent(e.target.value)
   }
 
-  const convertTimestamp = (timestamp: string) => {
-    const date = new Date(timestamp)
-    return (
-      '' +
-      date.getDate() +
-      '/' +
-      (date.getMonth() + 1) +
-      '/' +
-      date.getFullYear() +
-      ' ' +
-      date.getHours() +
-      ':' +
-      date.getMinutes()
-    )
-  }
-
   return (
     <div>
       <Button variant="contained" color="secondary" onClick={handleOpen}>
@@ -146,7 +131,7 @@ const CommentModal: React.FC<CommentModalProps> = (props) => {
                         <PersonIcon />
                       </ListItemIcon>
                       <ListItemText
-                        primary={`${First_Name} ${Last_Name} @${Username} (${convertTimestamp(
+                        primary={`${First_Name} ${Last_Name} @${Username} (${convertTimestampExact(
                           CreatedAt,
                         )}):`}
                         secondary={`${Content}`}

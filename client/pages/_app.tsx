@@ -5,6 +5,7 @@ import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { theme } from '../src/theme'
 import 'aos/dist/aos.css'
+import 'react-datepicker/dist/react-datepicker.css'
 
 export default function MyApp(props: AppProps) {
   const { Component, pageProps } = props

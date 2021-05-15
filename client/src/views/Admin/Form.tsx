@@ -8,11 +8,13 @@ import {
   Button,
   Grid,
 } from '@material-ui/core'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import Notification from '../../components/Notification'
 import { createEvent } from '../../services/events'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 import { uploadSinglePhoto } from '../../services/photos'
+import ReactDatePicker from 'react-datepicker'
+import { convertTimestamp } from '../../utils'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -62,12 +64,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Form: React.FC = (props) => {
   const classes = useStyles(props)
   const [image, setImage] = useState('/null_image.png')
-  const { register, handleSubmit } = useForm({})
+  const { register, handleSubmit, control, watch } = useForm({})
+  const [selectedDate, setSelectedDate] = useState(null)
   const [notificationMessage, setNotificationMessage] = useState(null)
   const [status, setStatus] = useState('')
 
   const onSubmit = (data) => {
-    console.log(data)
+    data['event_date'] = convertTimestamp(selectedDate)
     createEvent(data)
       .then((res) => {
         const formData = new FormData()
@@ -94,6 +97,12 @@ const Form: React.FC = (props) => {
     if (event.target.files && event.target.files[0]) {
       setImage(URL.createObjectURL(event.target.files[0]))
     }
+  }
+
+  const onDateChange = (m) => {
+    console.log('Hi')
+    console.log(m.format('DD/MM/YYYY'))
+    setSelectedDate(m.format('DD/MM/YYYY'))
   }
 
   return (
@@ -133,20 +142,6 @@ const Form: React.FC = (props) => {
               />
             </Grid>
             <Grid item xs={4} lg={2}>
-              <Typography>Event Date</Typography>
-            </Grid>
-            <Grid item xs={8} lg={10}>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                inputRef={register}
-                fullWidth
-                id="event_date"
-                name="event_date"
-                InputLabelProps={{ shrink: true }}
-              />
-            </Grid>
-            <Grid item xs={4} lg={2}>
               <Typography>Location</Typography>
             </Grid>
             <Grid item xs={8} lg={10}>
@@ -172,6 +167,26 @@ const Form: React.FC = (props) => {
                 name="category"
                 id="category"
                 InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={4} lg={2}>
+              <Typography>Date</Typography>
+            </Grid>
+            <Grid item xs={8} lg={10}>
+              <Controller
+                as={ReactDatePicker}
+                control={control}
+                valueName="selected"
+                selected={selectedDate}
+                onChange={([selected]) => {
+                  setSelectedDate(selected)
+                  return selected
+                }}
+                dateFormat="dd/MM/yyyy"
+                placeholderText="Select Date"
+                name="DatePicker"
+                defaultValue={null}
+                autoComplete="off"
               />
             </Grid>
             <Grid item xs={4} lg={2}>

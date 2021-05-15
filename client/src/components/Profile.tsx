@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Avatar, Box, Typography } from '@material-ui/core'
 import { getSingleUser } from '../services/users'
+import { convertTimestamp } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,20 +26,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }))
-
-const convertTimestamp = (timestamp: string) => {
-  if (timestamp) {
-    const date = new Date(timestamp)
-    return (
-      '' +
-      date.getDate() +
-      '/' +
-      (date.getMonth() + 1) +
-      '/' +
-      date.getFullYear()
-    )
-  }
-}
 
 const Profile: React.FC = (props) => {
   const classes = useStyles()
