@@ -29,7 +29,14 @@ const useStyles = makeStyles((theme) => ({
 const convertTimestamp = (timestamp: string) => {
   if (timestamp) {
     const date = new Date(timestamp)
-    return date.toISOString().slice(0, 10)
+    return (
+      '' +
+      date.getDate() +
+      '/' +
+      (date.getMonth() + 1) +
+      '/' +
+      date.getFullYear()
+    )
   }
 }
 
