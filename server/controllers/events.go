@@ -14,6 +14,17 @@ type CreateEventInput struct {
 	Category    string `json:"category" binding:"required"`
 }
 
+type EventResult struct {
+	Event_Id    uint64
+	Created_At  string
+	Title       string
+	Description string
+	Event_Date  string
+	Location    string
+	Category    string
+	Photo_Url   string
+}
+
 func GetAllEvents(c *gin.Context) {
 	var events []models.Events
 	models.DB.Find(&events)
@@ -21,13 +32,8 @@ func GetAllEvents(c *gin.Context) {
 }
 
 func GetSingleEvent(c *gin.Context) {
-	var event models.Events
-
-	if err := models.DB.Where("event_id = ?", c.Param("eventId")).First(&event).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
-		return
-	}
-
+	var event EventResult
+	models.DB.Model(models.Events{}).Select("events.event_id, events.created_at, events.title, events.description, events.event_date, events.location, events.category, photos.photo_url").Joins("left join photos on events.event_id = photos.event_id").Where("events.event_id = ?", c.Param("eventId")).Scan(&event)
 	c.JSON(http.StatusOK, gin.H{"data": event})
 }
 
