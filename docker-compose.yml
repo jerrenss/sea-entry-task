@@ -3,8 +3,8 @@ services:
   database:
     container_name: event-db
     image: mysql
-    ports:
-      - "3307:3306"
+    expose:
+      - "3306"
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: event-app-user
@@ -14,8 +14,6 @@ services:
   server:
     container_name: event-server
     build: ./server
-    ports:
-      - "5000:5000"
     restart: always
     depends_on:
       - "database"
