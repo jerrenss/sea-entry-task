@@ -1,31 +1,30 @@
-FROM node:alpine as builder
+FROM node:alpine
 
-# create & set working directory
-RUN mkdir -p /usr/src
-WORKDIR /usr/src
+# Set working directory
+WORKDIR /usr/app
 
-# copy source files
-COPY . /usr/src
+# Install PM2 globally
+RUN npm install --global pm2
 
-# install dependencies
+# Copy "package.json" and "yarn.lock" before other files
+# Utilise Docker cache to save re-installing dependencies if unchanged
+COPY ./package.json ./yarn.lock ./
+
+# Install dependencies
 RUN yarn
+
+# Copy all files
+COPY ./ ./
 
 # Build app
 RUN yarn build
 
+# Expose the listening port
+EXPOSE 3000
 
-FROM nginx:alpine
+# Run container as non-root (unprivileged) user
+# The "node" user is provided in the Node.js Alpine base image
+USER node
 
-#!/bin/sh
-
-COPY ./.nginx/nginx.conf /etc/nginx/nginx.conf
-
-## Remove default nginx index page
-RUN rm -rf /usr/share/nginx/html/*
-
-# Copy from the stage 1
-COPY --from=builder /usr/src/out /usr/share/nginx/html
-
-EXPOSE 3000 80
-
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+# Launch app with PM2
+CMD [ "pm2-runtime", "start", "npm", "--", "start" ]

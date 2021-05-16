@@ -12,13 +12,10 @@ services:
       MYSQL_USER: event-app-user
       MYSQL_PASSWORD: event-app-user
   server:
+    container_name: event-server
     build: ./server
     ports:
       - "5000:5000"
-    # volumes:
-    #   - ./static:/go/src/temp/static
-    #   - ./views:/go/src/temp/views
-    # command: bash -c 'cd /go/src/temp && go run main.go'
     restart: always
     depends_on:
       - "database"

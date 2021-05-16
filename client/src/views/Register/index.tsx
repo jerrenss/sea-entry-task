@@ -190,7 +190,7 @@ const Register: React.FC = () => {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/login">
+                <Link href="/">
                   <Typography variant="body2">
                     Already have an account? Log in
                   </Typography>
