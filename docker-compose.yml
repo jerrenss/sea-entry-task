@@ -3,8 +3,8 @@ services:
   database:
     container_name: event-db
     image: mysql
-    expose:
-      - "3306"
+    ports:
+      - "3308:3306"
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: event-app-user
@@ -15,15 +15,19 @@ services:
     container_name: event-server
     build: ./server
     restart: always
+    environment:
+      GIN_MODE: release
     depends_on:
       - "database"
   client:
+    container_name: event-client
     build: ./client
     depends_on:
       - "server"
   nginx:
+    container_name: event-nginx
     build: ./client/nginx
     ports:
-      - 80:80
+      - "80:80"
     depends_on:
       - "client"
