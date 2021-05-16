@@ -2,6 +2,8 @@
 
 /server/uploads
 
+server/.DS_Store
+
 /client/.env
 
 /client/node_modules

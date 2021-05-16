@@ -195,10 +195,19 @@ const Event: React.FC<EventProps> = (props) => {
             </ToggleButton>
           </Box>
           <Box className={classes.content}>
-            <img
+            {/* <img
               src={
                 event?.Photo_Url
                   ? `${process.env.NEXT_PUBLIC_DEV_PHOTO_SERVER_URL}${event?.Photo_Url}`
+                  : '/login-banner.png'
+              }
+              alt="Event Banner"
+              className={classes.image}
+            /> */}
+            <img
+              src={
+                event?.Photo_Url
+                  ? `${window.location.origin}/${event?.Photo_Url}`
                   : '/login-banner.png'
               }
               alt="Event Banner"
