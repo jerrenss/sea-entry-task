@@ -19,3 +19,13 @@ services:
     restart: always
     depends_on:
       - "database"
+  client:
+    build: ./client
+    depends_on:
+      - "server"
+  nginx:
+    build: ./client/nginx
+    ports:
+      - 80:80
+    depends_on:
+      - "client"
