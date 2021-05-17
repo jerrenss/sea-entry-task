@@ -2,11 +2,10 @@ package controllers
 
 import (
 	"fmt"
-	"net/http"
-	"os"
-	// "errors"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"os"
 )
 
 func ExtractToken(r *http.Request) string {
