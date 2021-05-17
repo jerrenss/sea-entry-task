@@ -24,14 +24,22 @@ func SetupDB() {
 		panic(err.Error())
 	}
 
-	instance.AutoMigrate(&Users{})
-	instance.AutoMigrate(&Events{})
-	instance.AutoMigrate(&Photos{})
-	instance.AutoMigrate(&Registers{})
-	instance.AutoMigrate(&Likes{})
-	instance.AutoMigrate(&Comments{})
-
 	fmt.Println("Connected to MySQL!")
 
 	DB = instance
+
+	DB.AutoMigrate(&Users{})
+	DB.AutoMigrate(&Events{})
+	DB.AutoMigrate(&Photos{})
+	DB.AutoMigrate(&Registers{})
+	DB.AutoMigrate(&Likes{})
+	DB.AutoMigrate(&Comments{})
+
+	DB.Model(&Likes{}).AddForeignKey("event_id", "events(event_id)", "CASCADE", "CASCADE")
+	DB.Model(&Likes{}).AddForeignKey("user_id", "users(user_id)", "CASCADE", "CASCADE")
+	DB.Model(&Comments{}).AddForeignKey("event_id", "events(event_id)", "CASCADE", "CASCADE")
+	DB.Model(&Comments{}).AddForeignKey("user_id", "users(user_id)", "CASCADE", "CASCADE")
+	DB.Model(&Registers{}).AddForeignKey("event_id", "events(event_id)", "CASCADE", "CASCADE")
+	DB.Model(&Registers{}).AddForeignKey("user_id", "users(user_id)", "CASCADE", "CASCADE")
+	DB.Model(&Photos{}).AddForeignKey("event_id", "events(event_id)", "CASCADE", "CASCADE")
 }

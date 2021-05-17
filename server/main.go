@@ -20,6 +20,10 @@ func main() {
 
 	models.SetupDB()
 
+	// Customises maximum number of open and idle connections to the database
+	models.DB.DB().SetMaxIdleConns(10)
+	models.DB.DB().SetMaxOpenConns(100)
+
 	api := Router.Group("/api")
 	{
 		api.GET("/", func(ctx *gin.Context) {

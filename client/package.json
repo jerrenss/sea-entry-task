@@ -5,9 +5,7 @@
   "scripts": {
     "build": "next build && next export",
     "dev": "next dev",
-    "start": "next start",
-    "test": "jest --verbose",
-    "server": "json-server -p3003 --watch db.json"
+    "start": "next start"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
