@@ -13,11 +13,11 @@ export const createEvent = (createEventInput: CreateEventInput) => {
 }
 
 export const getAllEvents = (page: number, category: string) => {
-  return apiClient.get(`/events/?page=${page}&category=${category}`)
+  return apiClient.get(`/events?page=${page}&category=${category}`)
 }
 
 export const getEventsCount = (category: string) => {
-  return apiClient.get(`/events/count/?category=${category}`)
+  return apiClient.get(`/events/count?category=${category}`)
 }
 
 export const getEventCategories = () => {

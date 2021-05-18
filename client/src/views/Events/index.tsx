@@ -70,12 +70,15 @@ const Events: React.FC = (props) => {
   const [category, setCategory] = useState('')
 
   useEffect(() => {
+    handleGetEventsCount(category)
+    handleGetEventCategories()
+  }, [])
+
+  useEffect(() => {
     if (!isNaN(page)) {
       handleGetAllEvents(page, category)
-      handleGetEventsCount(category)
-      handleGetEventCategories()
     }
-  }, [])
+  }, [page])
 
   const handleGetAllEvents = (page: number, category: string) => {
     getAllEvents(page, category)
@@ -110,7 +113,6 @@ const Events: React.FC = (props) => {
   const handleSelectPage = (event) => {
     const newPage = event.target.value
     setPage(newPage)
-    handleGetAllEvents(newPage, category)
   }
 
   const handleSelectCategory = (event) => {
@@ -128,14 +130,12 @@ const Events: React.FC = (props) => {
   const handleIncreasePage = () => {
     if (page < divisionAndCeiling(eventsCount)) {
       setPage(page + 1)
-      handleGetAllEvents(page + 1, category)
     }
   }
 
   const handleDecreasePage = () => {
     if (page > 1) {
       setPage(page - 1)
-      handleGetAllEvents(page - 1, category)
     }
   }
 
