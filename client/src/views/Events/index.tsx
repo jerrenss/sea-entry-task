@@ -12,14 +12,16 @@ import ArrowLeftIcon from '@material-ui/icons/ArrowLeft'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'
 import {
   Box,
+  TextField,
   Typography,
   Select,
   MenuItem,
   InputBase,
   makeStyles,
 } from '@material-ui/core'
-import classes from '*.module.css'
 import UserRoute from '../../components/Authentication/UserRoute'
+import moment from 'moment'
+import RefreshIcon from '@material-ui/icons/Refresh'
 
 const useStyles = makeStyles((theme) => ({
   paginationWrapper: {
@@ -33,6 +35,12 @@ const useStyles = makeStyles((theme) => ({
   },
   arrowIcon: {
     fontSize: '2rem',
+  },
+  dateInput: {
+    width: 100,
+    '& .MuiInputLabel-root': {
+      color: 'grey',
+    },
   },
 }))
 
@@ -68,20 +76,26 @@ const Events: React.FC = (props) => {
 
   const [page, setPage] = useState(1)
   const [category, setCategory] = useState('')
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
 
   useEffect(() => {
-    handleGetEventsCount(category)
+    handleGetEventsCount(category, getDateRange(startDate, endDate))
     handleGetEventCategories()
   }, [])
 
   useEffect(() => {
     if (!isNaN(page)) {
-      handleGetAllEvents(page, category)
+      handleGetAllEvents(page, category, getDateRange(startDate, endDate))
     }
   }, [page])
 
-  const handleGetAllEvents = (page: number, category: string) => {
-    getAllEvents(page, category)
+  const handleGetAllEvents = (
+    page: number,
+    category: string,
+    dateRange: string,
+  ) => {
+    getAllEvents(page, category, dateRange)
       .then((res) => {
         setEvents(res.data.data)
       })
@@ -90,8 +104,8 @@ const Events: React.FC = (props) => {
       })
   }
 
-  const handleGetEventsCount = (category: string) => {
-    getEventsCount(category)
+  const handleGetEventsCount = (category: string, dateRange: string) => {
+    getEventsCount(category, dateRange)
       .then((res) => {
         setEventsCount(res.data.data)
       })
@@ -118,8 +132,8 @@ const Events: React.FC = (props) => {
   const handleSelectCategory = (event) => {
     const newCategory = event.target.value
     setCategory(newCategory)
-    handleGetAllEvents(1, newCategory)
-    handleGetEventsCount(newCategory)
+    handleGetAllEvents(1, newCategory, getDateRange(startDate, endDate))
+    handleGetEventsCount(newCategory, getDateRange(startDate, endDate))
     setPage(1)
   }
 
@@ -136,6 +150,40 @@ const Events: React.FC = (props) => {
   const handleDecreasePage = () => {
     if (page > 1) {
       setPage(page - 1)
+    }
+  }
+
+  const handleStartDate = (event) => {
+    const newStartDate = event.target.value
+    setStartDate(newStartDate)
+    const dateRange = getDateRange(newStartDate, endDate)
+    if (dateRange != '') {
+      handleGetAllEvents(1, category, dateRange)
+      handleGetEventsCount(category, dateRange)
+      setPage(1)
+    }
+  }
+
+  const handleEndDate = (event) => {
+    const newEndDate = event.target.value
+    setEndDate(newEndDate)
+    const dateRange = getDateRange(startDate, newEndDate)
+    if (dateRange != '') {
+      handleGetAllEvents(1, category, dateRange)
+      handleGetEventsCount(category, dateRange)
+      setPage(1)
+    }
+  }
+
+  const getDateRange = (start, end) => {
+    if (
+      moment(start, 'YYYY/MM/DD', true).isValid() &&
+      moment(end, 'YYYY/MM/DD', true).isValid() &&
+      start <= end
+    ) {
+      return `${start}:${end}`
+    } else {
+      return ''
     }
   }
 
@@ -163,6 +211,32 @@ const Events: React.FC = (props) => {
           actions={[
             {
               icon: () => (
+                <TextField
+                  className={classes.dateInput}
+                  label="Start Date"
+                  value={startDate}
+                  onChange={handleStartDate}
+                />
+              ),
+              tooltip: 'Choose Start Date',
+              isFreeAction: true,
+              onClick: (event) => event,
+            },
+            {
+              icon: () => (
+                <TextField
+                  className={classes.dateInput}
+                  label="End Date"
+                  value={endDate}
+                  onChange={handleEndDate}
+                />
+              ),
+              tooltip: 'Choose End Date',
+              isFreeAction: true,
+              onClick: (event) => event,
+            },
+            {
+              icon: () => (
                 <Select
                   value={category}
                   onChange={handleSelectCategory}
@@ -178,7 +252,20 @@ const Events: React.FC = (props) => {
               ),
               tooltip: 'Choose Category',
               isFreeAction: true,
-              onClick: (event) => console.log(event.target.value),
+              onClick: (event) => event,
+            },
+            {
+              icon: () => <RefreshIcon />,
+              tooltip: 'Reset Filters',
+              isFreeAction: true,
+              onClick: (event) => {
+                setStartDate('')
+                setEndDate('')
+                setCategory('')
+                setPage(1)
+                handleGetAllEvents(1, '', '')
+                handleGetEventsCount('', '')
+              },
             },
           ]}
         />

@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type CreateEventInput struct {
@@ -34,10 +35,18 @@ func GetAllEvents(c *gin.Context) {
 	var events []models.Events
 	page := c.Request.URL.Query().Get("page")
 	category := c.Request.URL.Query().Get("category")
+	dateRange := c.Request.URL.Query().Get("dateRange")
+
 	pageInt, _ := strconv.Atoi(page)
 
-	if category != "" {
+	if category != "" && dateRange != "" {
+		dates := strings.Split(dateRange, ":")
+		models.DB.Limit(10).Offset(10*(pageInt-1)).Order("created_at").Where("category = ?", category).Where("event_date BETWEEN ? AND ?", dates[0], dates[1]).Find(&events)
+	} else if category != "" {
 		models.DB.Limit(10).Offset(10*(pageInt-1)).Order("created_at").Where("category = ?", category).Find(&events)
+	} else if dateRange != "" {
+		dates := strings.Split(dateRange, ":")
+		models.DB.Limit(10).Offset(10*(pageInt-1)).Order("created_at").Where("event_date BETWEEN ? AND ?", dates[0], dates[1]).Find(&events)
 	} else {
 		models.DB.Limit(10).Offset(10 * (pageInt - 1)).Order("created_at").Find(&events)
 	}
@@ -48,9 +57,16 @@ func GetAllEvents(c *gin.Context) {
 func GetEventsCount(c *gin.Context) {
 	var count int
 	category := c.Request.URL.Query().Get("category")
+	dateRange := c.Request.URL.Query().Get("dateRange")
 
-	if category != "" {
+	if category != "" && dateRange != "" {
+		dates := strings.Split(dateRange, ":")
+		models.DB.Model(models.Events{}).Where("category = ?", category).Where("event_date BETWEEN ? AND ?", dates[0], dates[1]).Count(&count)
+	} else if category != "" {
 		models.DB.Model(models.Events{}).Where("category = ?", category).Count(&count)
+	} else if dateRange != "" {
+		dates := strings.Split(dateRange, ":")
+		models.DB.Model(models.Events{}).Where("event_date BETWEEN ? AND ?", dates[0], dates[1]).Count(&count)
 	} else {
 		models.DB.Model(models.Events{}).Count(&count)
 	}
