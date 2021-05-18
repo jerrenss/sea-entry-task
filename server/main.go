@@ -47,6 +47,7 @@ func main() {
 	// Event Routes
 	Router.GET("/api/events", controllers.ValidateAuth(), controllers.GetAllEvents)
 	Router.GET("/api/events/count", controllers.ValidateAuth(), controllers.GetEventsCount)
+	Router.GET("/api/events/categories", controllers.ValidateAuth(), controllers.GetEventCategories)
 	Router.GET("/api/events/:eventId", controllers.ValidateAuth(), controllers.GetSingleEvent)
 	Router.POST("/api/events/create", controllers.ValidateAuth(), controllers.ValidateAdmin(), controllers.CreateEvent)
 

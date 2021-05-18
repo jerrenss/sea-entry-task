@@ -26,18 +26,42 @@ type EventResult struct {
 	Photo_Url   string
 }
 
+type EventCategoryResult struct {
+	Category string
+}
+
 func GetAllEvents(c *gin.Context) {
 	var events []models.Events
 	page := c.Request.URL.Query().Get("page")
+	category := c.Request.URL.Query().Get("category")
 	pageInt, _ := strconv.Atoi(page)
-	models.DB.Limit(10).Offset(10 * (pageInt - 1)).Order("created_at").Find(&events)
+
+	if category != "" {
+		models.DB.Limit(10).Offset(10*(pageInt-1)).Order("created_at").Where("category = ?", category).Find(&events)
+	} else {
+		models.DB.Limit(10).Offset(10 * (pageInt - 1)).Order("created_at").Find(&events)
+	}
+
 	c.JSON(http.StatusOK, gin.H{"data": events})
 }
 
 func GetEventsCount(c *gin.Context) {
 	var count int
-	models.DB.Model(models.Events{}).Count(&count)
+	category := c.Request.URL.Query().Get("category")
+
+	if category != "" {
+		models.DB.Model(models.Events{}).Where("category = ?", category).Count(&count)
+	} else {
+		models.DB.Model(models.Events{}).Count(&count)
+	}
+
 	c.JSON(http.StatusOK, gin.H{"data": count})
+}
+
+func GetEventCategories(c *gin.Context) {
+	var categories []EventCategoryResult
+	models.DB.Model(models.Events{}).Select("distinct(events.category)").Scan(&categories)
+	c.JSON(http.StatusOK, gin.H{"data": categories})
 }
 
 func GetSingleEvent(c *gin.Context) {
