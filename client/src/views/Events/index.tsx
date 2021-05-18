@@ -3,7 +3,11 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import MaterialTable from 'material-table'
 import Layout from '../../components/Layout'
 import { useRouter } from 'next/router'
-import { getAllEvents, getEventsCount } from '../../services/events'
+import {
+  getAllEvents,
+  getEventCategories,
+  getEventsCount,
+} from '../../services/events'
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'
 import {
@@ -46,19 +50,6 @@ const BootstrapInput = withStyles((theme) => ({
     fontSize: 16,
     padding: '10px 26px 10px 12px',
     transition: theme.transitions.create(['border-color', 'box-shadow']),
-    // Use the system font instead of the default Roboto font.
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
     '&:focus': {
       borderRadius: 4,
       borderColor: '#80bdff',
@@ -70,34 +61,64 @@ const BootstrapInput = withStyles((theme) => ({
 const Events: React.FC = (props) => {
   const classes = useStyles()
   const router = useRouter()
+
   const [events, setEvents] = useState([])
-  const [page, setPage] = useState(1)
+  const [categories, setCategories] = useState([])
   const [eventsCount, setEventsCount] = useState(0)
+
+  const [page, setPage] = useState(1)
+  const [category, setCategory] = useState('')
 
   useEffect(() => {
     if (!isNaN(page)) {
-      getAllEvents(page)
-        .then((res) => {
-          setEvents(res.data.data)
-        })
-        .catch((err) => {
-          alert(err.response.data.error)
-        })
+      handleGetAllEvents(page, category)
+      handleGetEventsCount(category)
+      handleGetEventCategories()
     }
-  }, [page])
+  }, [])
 
-  useEffect(() => {
-    getEventsCount()
+  const handleGetAllEvents = (page: number, category: string) => {
+    getAllEvents(page, category)
+      .then((res) => {
+        setEvents(res.data.data)
+      })
+      .catch((err) => {
+        alert(err.response.data.error)
+      })
+  }
+
+  const handleGetEventsCount = (category: string) => {
+    getEventsCount(category)
       .then((res) => {
         setEventsCount(res.data.data)
       })
       .catch((err) => {
         alert(err.response.data.error)
       })
-  }, [])
+  }
 
-  const handleSelect = (event) => {
-    setPage(event.target.value)
+  const handleGetEventCategories = () => {
+    getEventCategories()
+      .then((res) => {
+        setCategories(res.data.data)
+      })
+      .catch((err) => {
+        alert(err.response.data.error)
+      })
+  }
+
+  const handleSelectPage = (event) => {
+    const newPage = event.target.value
+    setPage(newPage)
+    handleGetAllEvents(newPage, category)
+  }
+
+  const handleSelectCategory = (event) => {
+    const newCategory = event.target.value
+    setCategory(newCategory)
+    handleGetAllEvents(1, newCategory)
+    handleGetEventsCount(newCategory)
+    setPage(1)
   }
 
   const divisionAndCeiling = (value) => {
@@ -107,20 +128,25 @@ const Events: React.FC = (props) => {
   const handleIncreasePage = () => {
     if (page < divisionAndCeiling(eventsCount)) {
       setPage(page + 1)
+      handleGetAllEvents(page + 1, category)
     }
   }
 
   const handleDecreasePage = () => {
     if (page > 1) {
       setPage(page - 1)
+      handleGetAllEvents(page - 1, category)
     }
   }
+
   return (
     <UserRoute>
       <Layout>
         <MaterialTable
           options={{
             paging: false,
+            sorting: false,
+            search: false,
           }}
           columns={[
             { title: 'ID', field: 'event_id' },
@@ -134,6 +160,27 @@ const Events: React.FC = (props) => {
           onRowClick={(event, rowData) => {
             router.push(`/user/event/${rowData.event_id}`)
           }}
+          actions={[
+            {
+              icon: () => (
+                <Select
+                  value={category}
+                  onChange={handleSelectCategory}
+                  input={<BootstrapInput />}
+                >
+                  <MenuItem value="">All</MenuItem>
+                  {categories.map(({ Category }, i) => (
+                    <MenuItem value={Category} key={i}>
+                      {Category}
+                    </MenuItem>
+                  ))}
+                </Select>
+              ),
+              tooltip: 'Choose Category',
+              isFreeAction: true,
+              onClick: (event) => console.log(event.target.value),
+            },
+          ]}
         />
         <Box className={classes.paginationWrapper}>
           <ArrowLeftIcon
@@ -142,7 +189,7 @@ const Events: React.FC = (props) => {
           />
           <Select
             value={page}
-            onChange={handleSelect}
+            onChange={handleSelectPage}
             input={<BootstrapInput />}
           >
             {[...Array(divisionAndCeiling(eventsCount))].map((e, i) => (
