@@ -89,7 +89,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
           <OpacityIcon className={classes.icon} />
           <Box className={classes.personalization}>
             <Typography className={classes.title}>SeaEvents</Typography>
-            <Typography className={classes.status}>v0.1</Typography>
+            <Typography className={classes.status}>v0.3</Typography>
           </Box>
           <Box className={classes.navigation}>
             {admin !== null && admin && (
