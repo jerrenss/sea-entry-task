@@ -9,7 +9,6 @@ import {
   Grid,
 } from '@material-ui/core'
 import { Controller, useForm } from 'react-hook-form'
-import Notification from '../../components/Notification'
 import { createEvent } from '../../services/events'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 import { uploadSinglePhoto } from '../../services/photos'
@@ -56,9 +55,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-  notification: {
-    marginBottom: theme.spacing(2),
-  },
 }))
 
 const Form: React.FC = (props) => {
@@ -66,8 +62,6 @@ const Form: React.FC = (props) => {
   const [image, setImage] = useState('/null_image.png')
   const { register, handleSubmit, control, watch } = useForm({})
   const [selectedDate, setSelectedDate] = useState(null)
-  const [notificationMessage, setNotificationMessage] = useState(null)
-  const [status, setStatus] = useState('')
 
   const onSubmit = (data) => {
     if (data['DatePicker'] !== null) {
@@ -178,7 +172,7 @@ const Form: React.FC = (props) => {
                   setSelectedDate(selected)
                   return selected
                 }}
-                dateFormat="dd/MM/yyyy"
+                dateFormat="yyyy/MM/dd"
                 placeholderText="Select Date"
                 name="DatePicker"
                 defaultValue={null}
@@ -225,9 +219,6 @@ const Form: React.FC = (props) => {
             Submit
           </Button>
         </form>
-      </Box>
-      <Box className={classes.notification}>
-        <Notification message={notificationMessage} status={status} />
       </Box>
     </>
   )
